@@ -12,7 +12,6 @@ export const DarkModeProvider = ({ children }) => {
       return false;
     }
   });
-
   useEffect(() => {
     if (typeof document !== "undefined") {
       if (isDarkMode) {
