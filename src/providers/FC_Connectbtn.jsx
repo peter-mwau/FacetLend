@@ -3,7 +3,7 @@ import { ConnectButton, darkTheme, lightTheme } from "thirdweb/react";
 import { defineChain } from "thirdweb/chains";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { useMemo, useEffect } from "react";
-import { useDarkMode } from "../contexts/ThemeContext.jsx";
+import { useDarkMode } from "../hooks/useDarkMode";
 
 export function FacetLendConnectButton() {
   const { isDarkMode } = useDarkMode();
@@ -42,36 +42,58 @@ export function FacetLendConnectButton() {
     [],
   );
 
+  // Diamond Protocol Theme Colors
   const customTheme = useMemo(
     () =>
       isDarkMode
         ? darkTheme({
             colors: {
-              separatorLine: "hsl(45, 93%, 47%)",
-              accentText: "hsl(41, 62%, 51%)",
-              modalBg: "hsl(221, 39%, 11%)",
-              borderColor: "hsl(58, 5%, 13%)",
-              selectedTextColor: "hsl(230, 7%, 22%)",
-              primaryText: "hsl(0, 0%, 100%)",
-              secondaryText: "hsl(0, 0%, 70%)",
-              accentButtonBg: "hsl(41, 80%, 49%)",
-              accentButtonText: "hsl(0, 0%, 100%)",
-              connectedButtonBg: "hsl(45, 93%, 48%)",
+              // Primary accents - Diamond Blue & Gold
+              accentText: "#3B82F6", // Diamond Blue
+              accentButtonBg: "#3B82F6", // Diamond Blue
+              accentButtonText: "#F3F4F6", // Ice White
+
+              // Backgrounds - Deep Shale Black theme
+              modalBg: "#0A0C10", // Deep Shale Black
+              borderColor: "#1A1F2E", // Gunmetal
+              separatorLine: "#141824", // Dark Slate
+
+              // Text colors
+              primaryText: "#F3F4F6", // Ice White
+              secondaryText: "#9CA3AF", // Cool Gray
+              selectedTextColor: "#3B82F6", // Diamond Blue
+
+              // Button states
+              connectedButtonBg: "#1A1F2E", // Gunmetal
+              connectedButtonBgHover: "#141824", // Dark Slate
+
+              // Wallet selector
+              walletSelectorButtonHoverBg: "#1A1F2E",
             },
           })
         : lightTheme({
             colors: {
-              separatorLine: "hsl(41, 80%, 49%)",
-              accentText: "hsl(41, 62%, 51%)",
-              modalBg: "hsl(0, 0%, 100%)",
-              borderColor: "hsl(0, 0%, 85%)",
-              selectedTextColor: "hsl(100, 100%, 100%)",
-              primaryText: "hsl(0, 0%, 0%)",
-              secondaryText: "hsl(0, 0%, 30%)",
-              accentButtonBg: "hsl(41, 80%, 49%)",
-              accentButtonText: "hsl(0, 0%, 100%)",
-              connectedButtonBg: "hsl(230, 26%, 95%)",
-              walletSelectorButtonHoverBg: "hsl(41, 80%, 49%)",
+              // Primary accents - Sapphire (slightly deeper for light mode)
+              accentText: "#2563EB", // Sapphire
+              accentButtonBg: "#2563EB", // Sapphire
+              accentButtonText: "#FFFFFF", // White
+
+              // Backgrounds - Arctic White theme
+              modalBg: "#FFFFFF", // Arctic White
+              borderColor: "#E5E7EB", // Soft Mist
+              separatorLine: "#F3F4F6", // Lighter mist
+
+              // Text colors
+              primaryText: "#1F2937", // Charcoal
+              secondaryText: "#6B7280", // Cool Gray
+              selectedTextColor: "#2563EB", // Sapphire
+
+              // Button states
+              connectedButtonBg: "#F3F4F6", // Soft Mist
+              connectedButtonBgHover: "#E5E7EB",
+
+              // Wallet selector
+              walletSelectorButtonHoverBg: "#EFF6FF", // Light blue tint
             },
           }),
     [isDarkMode],
@@ -79,29 +101,33 @@ export function FacetLendConnectButton() {
 
   return (
     <ConnectButton
-      {...(client ? { client } : {})}
+      client={client}
       wallets={wallets}
       connectButton={{
-        label: "Connect Wallet",
+        label: "◆ Connect Wallet",
         style: {
-          background: isDarkMode ? "#eab308" : "#e5e7eb",
-          color: isDarkMode ? "white" : "black",
-          border: "none",
-          borderRadius: "8px",
-          padding: "5px 5px",
-          fontSize: "16px",
-          fontWeight: "700",
+          background: isDarkMode
+            ? "linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)" // Diamond Blue to Frost Cyan
+            : "linear-gradient(135deg, #2563EB 0%, #0891B2 100%)", // Sapphire to Cyan
+          color: "#FFFFFF",
+          border: isDarkMode ? "1px solid rgba(59, 130, 246, 0.3)" : "none",
+          borderRadius: "12px",
+          padding: "10px 20px",
+          fontSize: "14px",
+          fontWeight: "600",
           cursor: "pointer",
-          width: "70%",
+          transition: "all 0.3s ease",
           boxShadow: isDarkMode
-            ? "0 2px 8px 0 #facc15, 0 0 0 2px #facc15"
-            : "0 0 0 2px #e5e7eb, 0 0 8px 2px #facc15",
+            ? "0 0 15px rgba(59, 130, 246, 0.3)" // Diamond Blue glow
+            : "0 2px 8px rgba(37, 99, 235, 0.2)",
         },
+        className: "connect-button-diamond",
       }}
       connectModal={{
         size: "compact",
         titleIcon: "/favicon.svg",
-        showThirdwebBranding: true,
+        showThirdwebBranding: false, // Cleaner look without thirdweb branding
+        title: "FacetLend",
       }}
       theme={customTheme}
     />
