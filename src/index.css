@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+/* Helper for smooth theme transitions (used by ThemeContext) */
+.theme-transition * {
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease;
+}
+
+/* Slight elevation for fixed navbar to sit above content */
+.fixed.z-50 {
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.3);
+}
