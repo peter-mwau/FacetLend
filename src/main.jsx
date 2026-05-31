@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { ThirdwebProvider } from "thirdweb/react";
+import { DarkModeProvider } from "./contexts/ThemeContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <ThirdwebProvider>
-        <App />
+        <DarkModeProvider>
+          <App />
+        </DarkModeProvider>
       </ThirdwebProvider>
     </BrowserRouter>
   </StrictMode>,

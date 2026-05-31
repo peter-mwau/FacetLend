@@ -3,15 +3,14 @@ import { ConnectButton, darkTheme, lightTheme } from "thirdweb/react";
 import { defineChain } from "thirdweb/chains";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { useMemo, useEffect } from "react";
-import { useDarkMode } from "../hooks/useDarkMode";
-import FacetLend_Logo from ".favicon.svg";
+import { useDarkMode } from "../contexts/ThemeContext.jsx";
 
 export function FacetLendConnectButton() {
-  const { darkMode } = useDarkMode();
+  const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-  }, [darkMode]);
+    document.documentElement.classList.toggle("dark", isDarkMode);
+  }, [isDarkMode]);
 
   const wallets = useMemo(
     () => [
@@ -35,7 +34,6 @@ export function FacetLendConnectButton() {
           chain: defineChain(11155111),
           sponsorGas: true,
         },
-        // smartAccount: false,
       }),
       createWallet("io.metamask"),
       createWallet("com.coinbase.wallet"),
@@ -46,7 +44,7 @@ export function FacetLendConnectButton() {
 
   const customTheme = useMemo(
     () =>
-      darkMode
+      isDarkMode
         ? darkTheme({
             colors: {
               separatorLine: "hsl(45, 93%, 47%)",
@@ -58,7 +56,6 @@ export function FacetLendConnectButton() {
               secondaryText: "hsl(0, 0%, 70%)",
               accentButtonBg: "hsl(41, 80%, 49%)",
               accentButtonText: "hsl(0, 0%, 100%)",
-              //   connectedButtonBg: "hsl(221, 39%, 11%)",
               connectedButtonBg: "hsl(45, 93%, 48%)",
             },
           })
@@ -73,23 +70,22 @@ export function FacetLendConnectButton() {
               secondaryText: "hsl(0, 0%, 30%)",
               accentButtonBg: "hsl(41, 80%, 49%)",
               accentButtonText: "hsl(0, 0%, 100%)",
-              //   connectedButtonBg: "hsl(221, 39%, 11%)",
               connectedButtonBg: "hsl(230, 26%, 95%)",
               walletSelectorButtonHoverBg: "hsl(41, 80%, 49%)",
             },
           }),
-    [darkMode],
+    [isDarkMode],
   );
 
   return (
     <ConnectButton
-      client={client}
+      {...(client ? { client } : {})}
       wallets={wallets}
       connectButton={{
         label: "Connect Wallet",
         style: {
-          background: darkMode ? "#eab308" : "#e5e7eb",
-          color: darkMode ? "white" : "black",
+          background: isDarkMode ? "#eab308" : "#e5e7eb",
+          color: isDarkMode ? "white" : "black",
           border: "none",
           borderRadius: "8px",
           padding: "5px 5px",
@@ -97,14 +93,14 @@ export function FacetLendConnectButton() {
           fontWeight: "700",
           cursor: "pointer",
           width: "70%",
-          boxShadow: darkMode
-            ? "0 2px 8px 0 #facc15, 0 0 0 2px #facc15" // #facc15 is Tailwind yellow-500
+          boxShadow: isDarkMode
+            ? "0 2px 8px 0 #facc15, 0 0 0 2px #facc15"
             : "0 0 0 2px #e5e7eb, 0 0 8px 2px #facc15",
         },
       }}
       connectModal={{
         size: "compact",
-        titleIcon: FacetLend_Logo,
+        titleIcon: "/favicon.svg",
         showThirdwebBranding: true,
       }}
       theme={customTheme}
