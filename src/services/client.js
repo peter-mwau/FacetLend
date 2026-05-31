@@ -1,7 +1,7 @@
 import { createThirdwebClient } from "thirdweb";
 
-const clientId = import.meta.env.VITE_THIRDWEB_CLIENT_ID || "848b03e7ab7e354845dbd6ab6782b5e2";
-const secretKey = import.meta.env.VITE_THIRDWEB_SECRET_KEY;
+const clientId = import.meta.env.VITE_APP_THIRDWEB_CLIENT_ID || "848b03e7ab7e354845dbd6ab6782b5e2";
+const secretKey = import.meta.env.VITE_APP_THIRDWEB_SECRET_KEY;
 
 let client = null;
 
