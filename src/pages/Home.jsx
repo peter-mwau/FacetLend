@@ -1,7 +1,10 @@
+import Navbar from "../components/Navbar";
+
 function Home() {
   return (
     <>
-      <div className="bg-gray-100 h-[100vh]">
+      <div className="bg-gray-100 h-[130vh]">
+        <Navbar />
         <h1 className="text-4xl font-bold text-center pt-20">
           Welcome to the Home Page
         </h1>

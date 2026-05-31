@@ -149,16 +149,16 @@ function Navbar() {
                 `}
                 aria-label="Toggle theme"
               >
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="wait" className="">
                   <motion.span
                     key={isDarkMode ? "dark" : "light"}
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 20, opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="text-xl"
+                    className="text-xl hover:cursor-pointer"
                   >
-                    {isDarkMode ? "🌙" : "☀️"}
+                    {!isDarkMode ? "🌙" : "☀️"}
                   </motion.span>
                 </AnimatePresence>
               </motion.button>
