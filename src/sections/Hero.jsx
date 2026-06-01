@@ -61,6 +61,7 @@ function HeroSection() {
 
   return (
     <div
+      id="hero"
       className={`relative min-h-screen font-sans antialiased selection:bg-blue-500/30 ${
         isDarkMode ? "bg-[#090A0F] text-white" : "bg-[#FAFAFC] text-gray-950"
       }`}

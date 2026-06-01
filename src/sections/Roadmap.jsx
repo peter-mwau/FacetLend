@@ -83,6 +83,7 @@ function RoadmapFAQ() {
 
   return (
     <section
+      id="roadmap"
       className={`py-24 relative border-b tracking-tight ${
         isDarkMode
           ? "bg-[#090A0F] text-white border-white/5"

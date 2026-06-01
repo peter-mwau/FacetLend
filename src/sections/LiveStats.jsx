@@ -87,8 +87,10 @@ function LiveStatsSection() {
   ];
 
   const getHealthColorClass = (health) => {
-    if (health >= 2.0) return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
-    if (health >= 1.5) return "text-amber-500 bg-amber-500/10 border-amber-500/20";
+    if (health >= 2.0)
+      return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
+    if (health >= 1.5)
+      return "text-amber-500 bg-amber-500/10 border-amber-500/20";
     return "text-rose-500 bg-rose-500/10 border-rose-500/20 animate-pulse";
   };
 
@@ -102,6 +104,7 @@ function LiveStatsSection() {
 
   return (
     <section
+      id="livestats"
       className={`relative border-b py-24 ${isDarkMode ? "bg-[#090A0F] text-white border-white/5" : "bg-[#FAFAFC] text-gray-950 border-black/5"}`}
     >
       <div
@@ -280,19 +283,25 @@ function LiveStatsSection() {
                         Total Collateral Allocated
                       </span>
                       <span className="font-bold">
-                        ${userPosition.supplied[selectedAsset]} {selectedAsset} equivalent
+                        ${userPosition.supplied[selectedAsset]} {selectedAsset}{" "}
+                        equivalent
                       </span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-white/5">
-                      <span className="text-gray-400">Active Utilized Debt</span>
+                      <span className="text-gray-400">
+                        Active Utilized Debt
+                      </span>
                       <span className="font-bold">
-                        ${userPosition.borrowed[selectedAsset]} {selectedAsset} equivalent
+                        ${userPosition.borrowed[selectedAsset]} {selectedAsset}{" "}
+                        equivalent
                       </span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-white/5">
                       <span className="text-gray-400">Provider Address</span>
                       <span className="font-bold truncate max-w-45 text-right">
-                        {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "NULL"}
+                        {address
+                          ? `${address.slice(0, 6)}...${address.slice(-4)}`
+                          : "NULL"}
                       </span>
                     </div>
                   </div>
@@ -338,7 +347,9 @@ function LiveStatsSection() {
                         {asset.symbol.slice(0, 2)}
                       </div>
                       <div className="min-w-0">
-                        <div className="font-semibold truncate">{asset.name}</div>
+                        <div className="font-semibold truncate">
+                          {asset.name}
+                        </div>
                         <div className="text-[10px] font-mono uppercase tracking-wider text-gray-500">
                           {asset.network} Architecture
                         </div>
