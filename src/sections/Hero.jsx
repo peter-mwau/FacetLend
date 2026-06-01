@@ -9,6 +9,7 @@ import {
   Activity,
   ShieldCheck,
 } from "lucide-react";
+import Navbar from "../components/Navbar";
 
 function HeroSection() {
   const { isDarkMode } = useDarkMode();
@@ -64,6 +65,7 @@ function HeroSection() {
         isDarkMode ? "bg-[#090A0F] text-white" : "bg-[#FAFAFC] text-gray-950"
       }`}
     >
+      <Navbar />
       {/* Structural Low-Contrast Technical Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div
