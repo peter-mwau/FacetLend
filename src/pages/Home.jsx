@@ -1,13 +1,14 @@
 import Navbar from "../components/Navbar";
+import { useDarkMode } from "../hooks/useDarkMode";
+import HeroSection from "../sections/Hero";
 
 function Home() {
+  const { isDarkMode } = useDarkMode();
   return (
     <>
-      <div className="bg-gray-100 h-[130vh]">
+      <div className={isDarkMode ? "dark" : "light"}>
         <Navbar />
-        <h1 className="text-4xl font-bold text-center pt-20">
-          Welcome to the Home Page
-        </h1>
+        <HeroSection />
       </div>
     </>
   );

@@ -84,7 +84,7 @@ function Navbar() {
       <div
         className={`${baseStyles} ${isFull ? fullStyles : centeredStyles} 
           ${isVisible ? visibleStyles : hiddenStyles} 
-          ${bgStyles} ${borderStyles} transition-all duration-500`}
+          ${bgStyles} ${borderStyles} transition-all duration-500 ${isDarkMode ? "dark" : "light"}`}
         style={{
           boxShadow:
             isDarkMode && !isFull
@@ -92,7 +92,11 @@ function Navbar() {
               : "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <div className="px-4 sm:px-6 py-3">
+        <div
+          className={
+            isDarkMode ? "dark px-4 sm:px-6 py-3" : "light px-4 sm:px-6 py-3"
+          }
+        >
           <div className="flex items-center justify-between">
             {/* Logo Section */}
             <div className="flex items-center space-x-2">
