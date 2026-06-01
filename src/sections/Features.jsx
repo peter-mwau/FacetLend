@@ -106,6 +106,7 @@ function FeaturesDeepDive() {
 
   return (
     <section
+      id="features"
       className={`py-24 relative border-b tracking-tight ${
         isDarkMode
           ? "bg-[#090A0F] text-white border-white/5"

@@ -66,6 +66,7 @@ function HowItWorks() {
 
   return (
     <section
+      id="about"
       className={`py-24 relative overflow-hidden border-b tracking-tight ${
         isDarkMode
           ? "bg-[#090A0F] text-white border-white/5"

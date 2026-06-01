@@ -78,6 +78,7 @@ function Footer() {
 
   return (
     <footer
+      id="footer"
       className={`relative border-t tracking-tight ${
         isDarkMode
           ? "bg-[#090A0F] text-white border-white/5"
@@ -95,18 +96,12 @@ function Footer() {
           {/* BRAND COLUMN: Core System Overview */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div
-                className={`p-2 rounded-lg border ${isDarkMode ? "bg-white/5 border-white/5" : "bg-black/5 border-black/5"}`}
-              >
-                <Layers size={18} className="text-blue-500" strokeWidth={1.5} />
-              </div>
               <div>
-                <div className="text-base font-bold uppercase tracking-tight">
-                  FacetLend
-                </div>
-                <div className="font-mono text-[9px] text-gray-500 uppercase tracking-widest">
-                  Diamond Protocol
-                </div>
+                <img
+                  src="/facetlend_logo.png"
+                  alt="FacetLend Logo"
+                  className="w-40 h-25"
+                />
               </div>
             </div>
 
