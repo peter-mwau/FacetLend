@@ -5,6 +5,7 @@ import FeaturesDeepDive from "../sections/Features";
 import Footer from "../sections/Footer";
 import HeroSection from "../sections/Hero";
 import LiveStatsSection from "../sections/LiveStats";
+import RoadmapFAQ from "../sections/Roadmap";
 
 function Home() {
   const { isDarkMode } = useDarkMode();
@@ -16,6 +17,7 @@ function Home() {
         <LiveStatsSection />
         <FeaturesDeepDive />
         <DeveloperTools />
+        <RoadmapFAQ />
         <Footer />
       </div>
     </>
