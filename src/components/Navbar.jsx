@@ -66,13 +66,13 @@ function Navbar() {
   const hiddenStyles = "-translate-y-full";
 
   // Theme-based background styles
-  const bgStyles = isDarkMode
-    ? "bg-gradient-to-r from-[#0A0C10] via-[#141824] to-[#0A0C10] backdrop-blur-md bg-opacity-95"
-    : "bg-gradient-to-r from-white via-[#F3F4F6] to-white shadow-md";
+  const bgStyles = isDarkMode ? "bg-[#090A0F]" : "bg-[#FAFAFC]";
 
   const borderStyles = isFull
-    ? "border-b border-opacity-20"
-    : `border ${isDarkMode ? "border-[#1A1F2E] border-opacity-50" : "border-gray-200"}`;
+    ? isDarkMode
+      ? "border-b border-white/5"
+      : "border-b border-black/5"
+    : `border ${isDarkMode ? "border-white/5" : "border-black/5"}`;
 
   const textStyles = isDarkMode ? "text-[#F3F4F6]" : "text-[#1F2937]";
   const hoverStyles = isDarkMode
@@ -86,10 +86,11 @@ function Navbar() {
           ${isVisible ? visibleStyles : hiddenStyles} 
           ${bgStyles} ${borderStyles} transition-all duration-500 ${isDarkMode ? "dark" : "light"}`}
         style={{
-          boxShadow:
-            isDarkMode && !isFull
-              ? "0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(59, 130, 246, 0.1)"
-              : "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          boxShadow: isFull
+            ? "none"
+            : isDarkMode
+              ? "0 8px 28px rgba(0, 0, 0, 0.16)"
+              : "0 6px 20px rgba(15, 23, 42, 0.06)",
         }}
       >
         <div
@@ -212,8 +213,8 @@ function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
             className={`
-              fixed top-[70px] left-0 right-0 z-40 md:hidden
-              ${isDarkMode ? "bg-[#0A0C10] border-b border-[#1A1F2E]" : "bg-white border-b border-gray-200"}
+              fixed top-17.5 left-0 right-0 z-40 md:hidden
+              ${isDarkMode ? "bg-[#090A0F] border-b border-white/5" : "bg-[#FAFAFC] border-b border-black/5"}
               shadow-xl rounded-b-2xl
             `}
           >

@@ -1,5 +1,5 @@
-import Navbar from "../components/Navbar";
 import { useDarkMode } from "../hooks/useDarkMode";
+import HowItWorks from "../sections/About";
 import HeroSection from "../sections/Hero";
 
 function Home() {
@@ -7,8 +7,8 @@ function Home() {
   return (
     <>
       <div className={isDarkMode ? "dark" : "light"}>
-        <Navbar />
         <HeroSection />
+        <HowItWorks />
       </div>
     </>
   );
