@@ -5,13 +5,16 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { ThirdwebProvider } from "thirdweb/react";
 import { DarkModeProvider } from "./contexts/ThemeContext.jsx";
+import { LendingProvider } from "./contexts/LendingContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <ThirdwebProvider>
         <DarkModeProvider>
-          <App />
+          <LendingProvider>
+            <App />
+          </LendingProvider>
         </DarkModeProvider>
       </ThirdwebProvider>
     </BrowserRouter>
