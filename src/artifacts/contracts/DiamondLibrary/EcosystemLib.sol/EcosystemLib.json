@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "EcosystemLib",
+  "sourceName": "contracts/DiamondLibrary/EcosystemLib.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220a88c14dbf89192b8c847ba35bdddb2568ed8547b723af84aed75e35c06c8ae8464736f6c63430008180033",
+  "deployedBytecode": "0x600080fdfea2646970667358221220a88c14dbf89192b8c847ba35bdddb2568ed8547b723af84aed75e35c06c8ae8464736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

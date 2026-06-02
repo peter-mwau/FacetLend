@@ -1,0 +1,44 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MockPool",
+  "sourceName": "contracts/mocks/MockPool.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "name": "flashLoanSimple",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608080604052346100155760cd908161001b8239f35b600080fdfe6004361015600c57600080fd5b6000803560e01c6342b0b77c14602157600080fd5b34608c5760a0366003190112608c576001600160a01b036004358181160360935760243590811603608c5760643567ffffffffffffffff808211608f5736602383011215608f578160040135908111608f5736910160240111608c5760843561ffff811603608c5780f35b80fd5b8280fd5b5080fdfea2646970667358221220f9161f25f94c1920439581e80a3be118b3bb3c3d8555e84732167ddfae0e019864736f6c63430008180033",
+  "deployedBytecode": "0x6004361015600c57600080fd5b6000803560e01c6342b0b77c14602157600080fd5b34608c5760a0366003190112608c576001600160a01b036004358181160360935760243590811603608c5760643567ffffffffffffffff808211608f5736602383011215608f578160040135908111608f5736910160240111608c5760843561ffff811603608c5780f35b80fd5b8280fd5b5080fdfea2646970667358221220f9161f25f94c1920439581e80a3be118b3bb3c3d8555e84732167ddfae0e019864736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
