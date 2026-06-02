@@ -1,0 +1,14 @@
+export const ADDRESSES = {
+    APS: "0xF2f1f61133c649a7FfEDF5154828747408D31A2a",
+    MainDiamond: "0xa0E42369FcCf25ea85EC9aa9597204AD59C8c6f4",
+    DiamondInit: "0x61a3BF9F4871327Ee6421FDCcB5eaca92e7d79c7",
+    Facets: {
+        DiamondCutFacet: "0x42Cc9e7E44B46E038a6aAA6fE79B8B63448f277a",
+        DiamondLoupeFacet: "0x0939a8f027F45fadaB59a4EFaD87cb436fEE05f1",
+        OwnershipFacet: "0xa012aD02ba1BD0942f9f2e3Ad28fC983C7DdaE04",
+        ApsdexFacet: "0x6C6D39214236FF901F293C089D0c6E7cea89FE6b",
+        FlashLoanFacet: "0x4aE2aD6D90E6D482c15Cb0Ae8a89ABDa57a1C435",
+        MovePriceFacet: "0x6b692009f937470661Aa379622AdaFF898de93b2",
+        LendingFacet: "0xC2E8e70fD402D614771d95160Ce5B3C8DF95d09e"
+    }
+};
