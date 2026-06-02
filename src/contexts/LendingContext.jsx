@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useContext, createContext, useState } from "react";
 import PropTypes from "prop-types";
 import { ADDRESSES } from "../constants/addresses";
@@ -22,7 +23,7 @@ export const useLending = () => {
   return useContext(LendingContext);
 };
 
-export const LendingProvider = ({ children }) => {
+export function LendingProvider({ children }) {
   const account = useActiveAccount();
   const address = account?.address || null;
   const [loadingInitializingLending, setLoadingInitializingLending] =
@@ -516,6 +517,7 @@ export const LendingProvider = ({ children }) => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/immutability
   LendingProvider.propTypes = {
     children: PropTypes.node.isRequired,
   };
@@ -538,10 +540,12 @@ export const LendingProvider = ({ children }) => {
         getPositionDetails,
         getAPSToETHValue,
         loadingInitializingLending,
+        healthFactor,
+        loading,
         error,
       }}
     >
       {children}
     </LendingContext.Provider>
   );
-};
+}
