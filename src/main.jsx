@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThirdwebProvider } from "thirdweb/react";
 import { DarkModeProvider } from "./contexts/ThemeContext.jsx";
 import { LendingProvider } from "./contexts/LendingContext.jsx";
+import { FlashLoanProvider } from "./contexts/FlashLoanContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -13,7 +14,9 @@ createRoot(document.getElementById("root")).render(
       <ThirdwebProvider>
         <DarkModeProvider>
           <LendingProvider>
-            <App />
+            <FlashLoanProvider>
+              <App />
+            </FlashLoanProvider>
           </LendingProvider>
         </DarkModeProvider>
       </ThirdwebProvider>
