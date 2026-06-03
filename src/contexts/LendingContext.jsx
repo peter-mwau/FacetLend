@@ -31,6 +31,10 @@ export function LendingProvider({ children }) {
   const [error, setError] = useState(null);
   const [healthFactor, setHealthFactor] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isLiquidatable, setIsLiquidatable] = useState(null);
+  const [yieldAmount, setYieldAmount] = useState(null);
+  const [repayableAmount, setRepayableAmount] = useState(null);
+  const [positionDetails, setPositionDetails] = useState(null);
 
   const contract = getContract({
     address: DiamondAddress,
@@ -407,6 +411,7 @@ export function LendingProvider({ children }) {
         params: [userAddress],
       });
 
+      setIsLiquidatable(isUndercollateralized);
       return isUndercollateralized;
     } catch (err) {
       console.error("Error checking liquidation status:", err);
@@ -432,6 +437,7 @@ export function LendingProvider({ children }) {
         params: [userAddress],
       });
 
+      setYieldAmount(yieldAmount);
       return yieldAmount;
     } catch (err) {
       console.error("Error calculating staking yield:", err);
@@ -457,6 +463,7 @@ export function LendingProvider({ children }) {
         params: [userAddress],
       });
 
+      setRepayableAmount(repayableAmount);
       return repayableAmount;
     } catch (err) {
       console.error("Error getting repayable amount:", err);
@@ -482,6 +489,7 @@ export function LendingProvider({ children }) {
         params: [userAddress],
       });
 
+      setPositionDetails(positionDetails);
       return positionDetails;
     } catch (err) {
       console.error("Error getting position details:", err);
@@ -543,6 +551,10 @@ export function LendingProvider({ children }) {
         healthFactor,
         loading,
         error,
+        isLiquidatable,
+        yieldAmount,
+        repayableAmount,
+        positionDetails,
       }}
     >
       {children}
