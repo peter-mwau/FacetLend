@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useContext, createContext, useState } from "react";
 import PropTypes from "prop-types";
 import { ADDRESSES } from "../constants/addresses";
@@ -48,8 +49,10 @@ export const FlashLoanProvider = ({ children }) => {
     const toastId = toast.loading("Initializing flash loan...");
     setError(null);
     if (!address) {
-      toast.error("Please connect your wallet to initialize flash loan.");
-      return;
+        toast.error("Please connect your wallet to initialize flash loan.");
+        setLoadingInitializingFlashLoan(false);
+        toast.dismiss(toastId);
+        return;
     }
 
     try {
@@ -86,6 +89,7 @@ export const FlashLoanProvider = ({ children }) => {
     const toastId = toast.loading("Requesting flash loan...");
     if (!address) {
       toast.error("Please connect your wallet to request a flash loan.");
+      toast.dismiss(toastId);
       return;
     }
 
@@ -121,6 +125,7 @@ export const FlashLoanProvider = ({ children }) => {
     const toastId = toast.loading("Withdrawing flash loan profits...");
     if (!address) {
       toast.error("Please connect your wallet to withdraw flash loan profits.");
+      toast.dismiss(toastId);
       return;
     }
 
