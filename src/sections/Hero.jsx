@@ -10,6 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
 
 function HeroSection() {
   const { isDarkMode } = useDarkMode();
@@ -137,7 +138,7 @@ function HeroSection() {
                     : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}
               >
-                <span>Launch App Console</span>
+                <Link to={"/mainpage"}>Launch App Console</Link>
                 <motion.span
                   animate={{ x: isHovered ? 3 : 0, y: isHovered ? -3 : 0 }}
                 >
