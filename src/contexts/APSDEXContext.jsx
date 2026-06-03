@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useContext, createContext, useState } from "react";
 import PropTypes from "prop-types";
 import { ADDRESSES } from "../constants/addresses";
