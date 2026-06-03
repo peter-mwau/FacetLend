@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useContext, createContext, useState } from "react";
 import PropTypes from "prop-types";
 import { ADDRESSES } from "../constants/addresses";
@@ -92,7 +93,7 @@ export const MovePriceProvider = ({ children }) => {
       const transaction = await prepareContractCall({
         contract,
         method: "movePrice",
-        paramss: [amount],
+          params: [amount],
       });
 
       await sendTransaction({ transaction, account });
