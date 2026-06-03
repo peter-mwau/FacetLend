@@ -7,6 +7,8 @@ import { ThirdwebProvider } from "thirdweb/react";
 import { DarkModeProvider } from "./contexts/ThemeContext.jsx";
 import { LendingProvider } from "./contexts/LendingContext.jsx";
 import { FlashLoanProvider } from "./contexts/FlashLoanContext.jsx";
+import { APSDEXProvider } from "./contexts/APSDEXContext.jsx";
+import MovePriceProvider from "./contexts/MovePriceContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,7 +17,11 @@ createRoot(document.getElementById("root")).render(
         <DarkModeProvider>
           <LendingProvider>
             <FlashLoanProvider>
-              <App />
+              <APSDEXProvider>
+                <MovePriceProvider>
+                  <App />
+                </MovePriceProvider>
+              </APSDEXProvider>
             </FlashLoanProvider>
           </LendingProvider>
         </DarkModeProvider>
