@@ -1,13 +1,15 @@
 // components/MainContent.jsx
-import React from "react";
+// import React from "react";
 import { useDarkMode } from "../hooks/useDarkMode";
 
 // Import your section components
-import BorrowingSection from "./sections/BorrowingSection";
-import FlashloanSection from "./sections/FlashloanSection";
-import SettingsSection from "./sections/SettingsSection";
 import Dashboard from "../../sections/MainPageSections/Dashboard";
 import LendingSection from "../../sections/MainPageSections/LendingSection";
+import BorrowingSection from "../../sections/MainPageSections/BorrowingSection";
+import FlashloanSection from "../../sections/MainPageSections/FlashloanSection";
+import MintAPSSection from "../../sections/MainPageSections/MintAPSSection";
+import MovePriceSection from "../../sections/MainPageSections/MovePriceSection";
+import SettingsSection from "../../sections/MainPageSections/SettingsSection";
 
 function MainContent({ activeSection }) {
   const { isDarkMode } = useDarkMode();
