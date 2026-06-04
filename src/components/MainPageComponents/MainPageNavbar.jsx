@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { FacetLendConnectButton } from "../../providers/FC_Connectbtn.jsx";
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { motion, AnimatePresence } from "framer-motion";
+import { Home } from "lucide-react";
+import { SlDocs } from "react-icons/sl";
 
 function MainPageNavbar({ activeSection = "overview" }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -121,6 +123,39 @@ function MainPageNavbar({ activeSection = "overview" }) {
                 {getPageSubtitle()}
               </motion.p>
             </AnimatePresence>
+          </div>
+
+          {/* Center navigation */}
+          <div className="hidden md:flex items-center gap-6">
+            {[
+              {
+                id: "Home",
+                label: "Home",
+                icon: <Home size={14} />,
+                link: "/",
+              },
+              {
+                id: "Docs",
+                label: "Docs",
+                icon: <SlDocs size={14} />,
+                link: "/docs",
+              },
+            ].map((item) => (
+              <a
+                key={item.id}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                  isDarkMode
+                    ? "text-gray-400 hover:text-white"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                {item.icon}
+                {item.label}
+              </a>
+            ))}
           </div>
 
           {/* Right Section */}
