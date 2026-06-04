@@ -1,5 +1,6 @@
 // components/MainContent.jsx
 // import React from "react";
+import { useState } from "react";
 import { useDarkMode } from "../../hooks/useDarkMode";
 
 // Import your section components
@@ -14,7 +15,7 @@ import SettingsSection from "../../sections/MainPageSections/SettingsSection";
 import MasterPageNavbar from "../../components/MainPageComponents/MainPageNavbar";
 import MainPageSidebar from "../../components/MainPageComponents/MainPageSidebar";
 
-function MainContent({ activeSection }) {
+function MainContent({ activeSection, onSectionChange }) {
   const { isDarkMode } = useDarkMode();
 
   const renderSection = () => {
@@ -42,11 +43,25 @@ function MainContent({ activeSection }) {
     <main
       className={`flex-1 min-h-screen transition-all duration-300 ${isDarkMode ? "bg-[#0A0C10]" : "bg-gray-50"}`}
     >
-      <MasterPageNavbar />
-      <MainPageSidebar activeSection={activeSection} />
-      <div className="p-6 md:p-8">{renderSection()}</div>
+      <MasterPageNavbar activeSection={activeSection} />
+      <MainPageSidebar
+        activeSection={activeSection}
+        onSectionChange={onSectionChange}
+      />
+      <div className="p-6 md:p-8 ml-[16%]">{renderSection()}</div>
     </main>
   );
 }
 
-export default MainContent;
+function MasterPage() {
+  const [activeSection, setActiveSection] = useState("overview");
+
+  return (
+    <MainContent
+      activeSection={activeSection}
+      onSectionChange={setActiveSection}
+    />
+  );
+}
+
+export default MasterPage;
