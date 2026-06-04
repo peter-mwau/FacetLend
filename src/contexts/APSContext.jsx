@@ -1,4 +1,4 @@
-import { useContext, createContext, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { ADDRESSES } from "../constants/addresses";
 import APSABI from "../artifacts/contracts/APS.sol/APS.json";
@@ -12,15 +12,10 @@ import {
   sendTransaction,
 } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
+import { APSContext } from "./APSContextSetup";
 
 const DiamondAddress = ADDRESSES.MainDiamond;
 const APS_ABI = APSABI.abi;
-
-const APSContext = createContext();
-
-export const useAPS = () => {
-  return useContext(APSContext);
-};
 
 export const APSProvider = ({ children }) => {
   const [error, setError] = useState(null);
