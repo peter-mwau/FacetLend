@@ -1,6 +1,6 @@
 // components/MainPageSidebar.jsx
-import React, { useState } from "react";
-import { useDarkMode } from "../hooks/useDarkMode";
+import { useState } from "react";
+import { useDarkMode } from "../../hooks/useDarkMode";
 import { motion } from "framer-motion";
 
 function MainPageSidebar({ activeSection, onSectionChange }) {

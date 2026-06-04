@@ -1,7 +1,7 @@
 // components/MainPageNavbar.jsx
 import { useEffect, useRef, useState } from "react";
-import { FacetLendConnectButton } from "../providers/FC_Connectbtn";
-import { useDarkMode } from "../hooks/useDarkMode";
+import { FacetLendConnectButton } from "../../providers/FC_Connectbtn.jsx";
+import { useDarkMode } from "../../hooks/useDarkMode";
 import { motion, AnimatePresence } from "framer-motion";
 
 function MainPageNavbar() {
