@@ -3,13 +3,11 @@ import React from "react";
 import { useDarkMode } from "../hooks/useDarkMode";
 
 // Import your section components
-import Dashboard from "./sections/Dashboard";
-import LendingSection from "./sections/LendingSection";
 import BorrowingSection from "./sections/BorrowingSection";
 import FlashloanSection from "./sections/FlashloanSection";
-import PositionsSection from "./sections/PositionsSection";
-import HealthFactorSection from "./sections/HealthFactorSection";
 import SettingsSection from "./sections/SettingsSection";
+import Dashboard from "../../sections/MainPageSections/Dashboard";
+import LendingSection from "../../sections/MainPageSections/LendingSection";
 
 function MainContent({ activeSection }) {
   const { isDarkMode } = useDarkMode();
@@ -25,9 +23,9 @@ function MainContent({ activeSection }) {
       case "flashloan":
         return <FlashloanSection />;
       case "positions":
-        return <PositionsSection />;
+        return <MintAPSSection />;
       case "health":
-        return <HealthFactorSection />;
+        return <MovePriceSection />;
       case "settings":
         return <SettingsSection />;
       default:
