@@ -1,6 +1,6 @@
 // components/MainContent.jsx
 // import React from "react";
-import { useDarkMode } from "../hooks/useDarkMode";
+import { useDarkMode } from "../../hooks/useDarkMode";
 
 // Import your section components
 import Dashboard from "../../sections/MainPageSections/Dashboard";
@@ -10,6 +10,9 @@ import FlashloanSection from "../../sections/MainPageSections/FlashloanSection";
 import MintAPSSection from "../../sections/MainPageSections/MintAPSSection";
 import MovePriceSection from "../../sections/MainPageSections/MovePriceSection";
 import SettingsSection from "../../sections/MainPageSections/SettingsSection";
+
+import MasterPageNavbar from "../../components/MainPageComponents/MainPageNavbar";
+import MainPageSidebar from "../../components/MainPageComponents/MainPageSidebar";
 
 function MainContent({ activeSection }) {
   const { isDarkMode } = useDarkMode();
@@ -39,6 +42,8 @@ function MainContent({ activeSection }) {
     <main
       className={`flex-1 min-h-screen transition-all duration-300 ${isDarkMode ? "bg-[#0A0C10]" : "bg-gray-50"}`}
     >
+      <MasterPageNavbar />
+      <MainPageSidebar activeSection={activeSection} />
       <div className="p-6 md:p-8">{renderSection()}</div>
     </main>
   );
