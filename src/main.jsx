@@ -9,6 +9,7 @@ import { LendingProvider } from "./contexts/LendingContext.jsx";
 import { FlashLoanProvider } from "./contexts/FlashLoanContext.jsx";
 import { APSDEXProvider } from "./contexts/APSDEXContext.jsx";
 import MovePriceProvider from "./contexts/MovePriceContext.jsx";
+import { APSProvider } from "./contexts/APSContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -19,7 +20,9 @@ createRoot(document.getElementById("root")).render(
             <FlashLoanProvider>
               <APSDEXProvider>
                 <MovePriceProvider>
-                  <App />
+                  <APSProvider>
+                    <App />
+                  </APSProvider>
                 </MovePriceProvider>
               </APSDEXProvider>
             </FlashLoanProvider>

@@ -11,7 +11,7 @@ function App() {
       <ToastContainer
         position="bottom-right"
         theme="colored"
-        className="z-[9999]"
+        className="z-9999"
       />
       <Routes>
         <Route path="/" element={<Home />} />
