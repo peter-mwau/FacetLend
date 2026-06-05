@@ -3,9 +3,21 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Remove problematic pure annotations from dependencies that break rolldown
+const stripPure = () => ({
+  name: 'strip-pure-annotations',
+  enforce: 'pre',
+  transform(code, id) {
+    if (!id || !(id.includes('/node_modules/') || id.includes('\\node_modules\\'))) return null
+    const cleaned = code.replace(/\/\*\s*#?__PURE__\s*\*\//g, '')
+    if (cleaned === code) return null
+    return { code: cleaned, map: null }
+  }
+})
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(),
+  plugins: [react(), tailwindcss(), stripPure(),
   VitePWA({
     registerType: 'autoUpdate',
     includeAssets: ['favicon.svg', 'icons.svg', 'apple-touch-icon.png'],
