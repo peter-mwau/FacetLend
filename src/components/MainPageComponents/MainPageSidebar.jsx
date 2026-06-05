@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,6 +18,25 @@ import {
 function MainPageSidebar({ activeSection, onSectionChange }) {
   const { isDarkMode } = useDarkMode();
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Collapse sidebar by default on small screens and notify listeners
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        if (window.innerWidth < 768) {
+          setIsCollapsed(true);
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Emit sidebarToggle events so other components (navbar) can adjust
+  useEffect(() => {
+    try {
+      const ev = new CustomEvent("sidebarToggle", { detail: { isCollapsed } });
+      window.dispatchEvent(ev);
+    } catch {}
+  }, [isCollapsed]);
 
   const menuItems = [
     {

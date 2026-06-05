@@ -9,6 +9,7 @@ import { SlDocs } from "react-icons/sl";
 function MainPageNavbar({ activeSection = "overview" }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(256); // Default width (256px = w-64)
+  const [isMobile, setIsMobile] = useState(false);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   // Get the title based on active section
@@ -44,9 +45,18 @@ function MainPageNavbar({ activeSection = "overview" }) {
       setSidebarWidth(event.detail.isCollapsed ? 80 : 256);
     };
 
+    const handleResize = () => {
+      setIsMobile(typeof window !== "undefined" && window.innerWidth < 768);
+    };
+
     window.addEventListener("sidebarToggle", handleSidebarToggle);
-    return () =>
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
       window.removeEventListener("sidebarToggle", handleSidebarToggle);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   // Handle scroll effect
@@ -70,7 +80,7 @@ function MainPageNavbar({ activeSection = "overview" }) {
     <>
       <nav
         className={`fixed top-0 pt-5 pl-10 right-0 z-40 transition-all duration-300 ${bgStyles}`}
-        style={{ left: `${sidebarWidth}px` }}
+        style={{ left: isMobile ? `0px` : `${sidebarWidth}px` }}
       >
         <div className="flex items-center justify-between px-6 py-3">
           {/* Page Title Section */}

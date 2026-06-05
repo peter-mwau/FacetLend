@@ -7,9 +7,10 @@ export const DarkModeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     try {
       const stored = localStorage.getItem("isDarkMode");
-      return stored ? JSON.parse(stored) : false;
+      // Default to dark mode unless the user has a stored preference
+      return stored ? JSON.parse(stored) : true;
     } catch {
-      return false;
+      return true;
     }
   });
   useEffect(() => {
