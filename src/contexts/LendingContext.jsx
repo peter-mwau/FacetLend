@@ -1,5 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useContext, createContext, useState } from "react";
+import {
+  useContext,
+  createContext,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import PropTypes from "prop-types";
 import { ADDRESSES } from "../constants/addresses";
 import LendingABI from "../artifacts/contracts/facets/LendingFacet.sol/LendingFacet.json";
@@ -36,12 +42,16 @@ export function LendingProvider({ children }) {
   const [repayableAmount, setRepayableAmount] = useState(null);
   const [positionDetails, setPositionDetails] = useState(null);
 
-  const contract = getContract({
-    address: DiamondAddress,
-    abi: Lending_ABI,
-    client,
-    chain: defineChain(11155111),
-  });
+  const contract = useMemo(
+    () =>
+      getContract({
+        address: DiamondAddress,
+        abi: Lending_ABI,
+        client,
+        chain: defineChain(11155111),
+      }),
+    [],
+  );
 
   /* =================================================
     WRITING FUNCTIONS
@@ -371,134 +381,154 @@ export function LendingProvider({ children }) {
     ================================================= */
 
   //Function to get user health factor
-  const getHealthFactor = async (userAddress) => {
-    setError(null);
-    setLoading(true);
-    try {
-      if (!client) {
-        throw new Error("Thirdweb client not configured");
+  const getHealthFactor = useCallback(
+    async (userAddress) => {
+      setError(null);
+      setLoading(true);
+      try {
+        if (!client) {
+          throw new Error("Thirdweb client not configured");
+        }
+
+        const healthFactor = await readContract({
+          contract,
+          method: "getHealthFactor",
+          params: [userAddress],
+        });
+
+        setHealthFactor(healthFactor);
+        return healthFactor;
+      } catch (err) {
+        console.error("Error getting health factor:", err);
+        setError(err.message || "Failed to get health factor");
+        return null;
+      } finally {
+        setLoading(false);
       }
-
-      const healthFactor = await readContract({
-        contract,
-        method: "getHealthFactor",
-        params: [userAddress],
-      });
-
-      setHealthFactor(healthFactor);
-      return healthFactor;
-    } catch (err) {
-      console.error("Error getting health factor:", err);
-      setError(err.message || "Failed to get health factor");
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [contract],
+  );
 
   //Function to check liquidation status of a user
-  const checkLiquidationStatus = async (userAddress) => {
-    setError(null);
-    setLoading(true);
-    try {
-      if (!client) {
-        throw new Error("Thirdweb client not configured");
+  const checkLiquidationStatus = useCallback(
+    async (userAddress) => {
+      setError(null);
+      setLoading(true);
+      try {
+        if (!client) {
+          throw new Error("Thirdweb client not configured");
+        }
+
+        const isUndercollateralized = await readContract({
+          contract,
+          method: "canLiquidate",
+          params: [userAddress],
+        });
+
+        setIsLiquidatable(isUndercollateralized);
+        return isUndercollateralized;
+      } catch (err) {
+        console.error("Error checking liquidation status:", err);
+        setError(err.message || "Failed to check liquidation status");
+        return null;
+      } finally {
+        setLoading(false);
       }
-
-      const isUndercollateralized = await readContract({
-        contract,
-        method: "canLiquidate",
-        params: [userAddress],
-      });
-
-      setIsLiquidatable(isUndercollateralized);
-      return isUndercollateralized;
-    } catch (err) {
-      console.error("Error checking liquidation status:", err);
-      setError(err.message || "Failed to check liquidation status");
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [contract],
+  );
 
   //Function to calculate user's staiking yield
-  const calculateStakingYield = async (userAddress) => {
-    setError(null);
-    setLoading(true);
-    try {
-      if (!client) {
-        throw new Error("Thirdweb client not configured");
+  const calculateStakingYield = useCallback(
+    async (userAddress) => {
+      setError(null);
+      setLoading(true);
+      try {
+        if (!client) {
+          throw new Error("Thirdweb client not configured");
+        }
+
+        const yieldAmount = await readContract({
+          contract,
+          method: "calculateStakingYield",
+          params: [userAddress],
+        });
+
+        setYieldAmount(yieldAmount);
+        return yieldAmount;
+      } catch (err) {
+        console.error("Error calculating staking yield:", err);
+        setError(err.message || "Failed to calculate staking yield");
+        return null;
+      } finally {
+        setLoading(false);
       }
-
-      const yieldAmount = await readContract({
-        contract,
-        method: "calculateStakingYield",
-        params: [userAddress],
-      });
-
-      setYieldAmount(yieldAmount);
-      return yieldAmount;
-    } catch (err) {
-      console.error("Error calculating staking yield:", err);
-      setError(err.message || "Failed to calculate staking yield");
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [contract],
+  );
 
   //Function to get user's repayable amount (principal + interest)
-  const getRepayableAmount = async (userAddress) => {
-    setError(null);
-    setLoading(true);
-    try {
-      if (!client) {
-        throw new Error("Thirdweb client not configured");
+  const getRepayableAmount = useCallback(
+    async (userAddress) => {
+      setError(null);
+      setLoading(true);
+      try {
+        if (!client) {
+          throw new Error("Thirdweb client not configured");
+        }
+
+        const repayableAmount = await readContract({
+          contract,
+          method: "getRepayAmount",
+          params: [userAddress],
+        });
+
+        setRepayableAmount(repayableAmount);
+        return repayableAmount;
+      } catch (err) {
+        console.error("Error getting repayable amount:", err);
+        setError(err.message || "Failed to get repayable amount");
+        return null;
+      } finally {
+        setLoading(false);
       }
-
-      const repayableAmount = await readContract({
-        contract,
-        method: "getRepayAmount",
-        params: [userAddress],
-      });
-
-      setRepayableAmount(repayableAmount);
-      return repayableAmount;
-    } catch (err) {
-      console.error("Error getting repayable amount:", err);
-      setError(err.message || "Failed to get repayable amount");
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [contract],
+  );
 
   //Function to get user's position details (collateral amount, borrowed amount, etc.)
-  const getPositionDetails = async (userAddress) => {
-    setError(null);
-    setLoading(true);
-    try {
-      if (!client) {
-        throw new Error("Thirdweb client not configured");
+  const getPositionDetails = useCallback(
+    async (userAddress) => {
+      setError(null);
+      if (!userAddress) {
+        setPositionDetails(null);
+        return null;
       }
 
-      const positionDetails = await readContract({
-        contract,
-        method: "getPosition",
-        params: [userAddress],
-      });
+      setLoading(true);
+      try {
+        if (!client) {
+          throw new Error("Thirdweb client not configured");
+        }
 
-      setPositionDetails(positionDetails);
-      return positionDetails;
-    } catch (err) {
-      console.error("Error getting position details:", err);
-      setError(err.message || "Failed to get position details");
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
+        const positionDetails = await readContract({
+          contract,
+          method: "getPosition",
+          params: [userAddress],
+        });
+
+        setPositionDetails(positionDetails);
+        return positionDetails;
+      } catch (err) {
+        console.error("Error getting position details:", err);
+        setError(err.message || "Failed to get position details");
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [contract],
+  );
 
   //Function to get APS to ETH value from the DEX for collateral valuation
   const getAPSToETHValue = async (apsAmount) => {
