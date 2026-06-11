@@ -14,7 +14,7 @@ import {
 import { defineChain } from "thirdweb/chains";
 import { APSContext } from "./APSContextSetup";
 
-const DiamondAddress = ADDRESSES.MainDiamond;
+const APS_Address = ADDRESSES.APS;
 const APS_ABI = APSABI.abi;
 
 export const APSProvider = ({ children }) => {
@@ -22,7 +22,7 @@ export const APSProvider = ({ children }) => {
   const [tokenBalance, setTokenBalance] = useState(null);
 
   const contract = getContract({
-    address: DiamondAddress,
+    address: APS_Address,
     abi: APS_ABI,
     client,
     chain: defineChain(11155111),
@@ -35,8 +35,9 @@ export const APSProvider = ({ children }) => {
    * WRITE FUNCTIONS
    * ========================================================================== */
 
-  //function to mint tokens
-  const mintTokens = async (tokenAddress, amount) => {
+  // function to mint tokens
+  // tokenHolder: receiver address
+  const mintTokens = async (tokenHolder, amount) => {
     setError(null);
     const toastId = toast.loading("Minting tokens...");
     if (!address) {
@@ -48,9 +49,9 @@ export const APSProvider = ({ children }) => {
       const transaction = await prepareContractCall({
         contract,
         method: "mintToken",
-        args: [tokenAddress, amount],
+        args: [tokenHolder, amount],
       });
-      await sendTransaction(transaction);
+      await sendTransaction({ transaction, account });
       toast.update(toastId, {
         render: `${amount} APS tokens minted successfully!`,
         type: "success",
@@ -69,8 +70,8 @@ export const APSProvider = ({ children }) => {
     }
   };
 
-  //Function to burn tokens
-  const burnTokens = async (tokenAddress, amount) => {
+  // Function to burn tokens
+  const burnTokens = async (tokenHolder, amount) => {
     setError(null);
     const toastId = toast.loading("Burning tokens...");
     if (!address) {
@@ -82,9 +83,9 @@ export const APSProvider = ({ children }) => {
       const transaction = await prepareContractCall({
         contract,
         method: "burnToken",
-        args: [tokenAddress, amount],
+        args: [tokenHolder, amount],
       });
-      await sendTransaction(transaction);
+      await sendTransaction({ transaction, account });
       toast.update(toastId, {
         render: `${amount} APS tokens burned successfully!`,
         type: "success",
