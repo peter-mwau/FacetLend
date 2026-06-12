@@ -21,7 +21,7 @@ export function FacetLendConnectButton() {
         metadata: {
           name: "FacetLend",
           image: {
-            src: "/favicon.svg",
+            src: "/facetlend_logo.png",
             width: 150,
             height: 150,
           },
@@ -125,7 +125,7 @@ export function FacetLendConnectButton() {
       }}
       connectModal={{
         size: "compact",
-        titleIcon: "/favicon.svg",
+        titleIcon: "/facetlend_logo.png",
         showThirdwebBranding: false, // Cleaner look without thirdweb branding
         title: "FacetLend",
       }}

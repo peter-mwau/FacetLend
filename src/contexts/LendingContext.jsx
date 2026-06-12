@@ -113,6 +113,7 @@ export function LendingProvider({ children }) {
         contract,
         method: "addCollateral",
         params: [amount],
+        value: amount,
       });
 
       const receipt = await sendTransaction({ transaction, account });
