@@ -104,10 +104,11 @@ export const APSDEXProvider = ({ children }) => {
   };
 
   //Function to initializeAPSDEX pool
-  const initializeAPSDEX = async (apsAmount) => {
-    if (!apsAmount || apsAmount <= 0) {
+  const initializeAPSDEX = async (apsAmountInWei) => {
+    // This function expects wei already
+    if (!apsAmountInWei || apsAmountInWei <= 0) {
       toast.error("Please enter a valid APS amount");
-      return;
+      return false;
     }
 
     setLoading(true);
@@ -116,83 +117,69 @@ export const APSDEXProvider = ({ children }) => {
     if (!address) {
       toast.error("Please connect your wallet");
       setLoading(false);
-      return;
+      return false;
     }
 
     try {
-      // First, check allowance
       const apsTokenContract = getContract({
         address: APSAddress,
-        abi: APS_TOKENABI, // Standard ERC20 ABI
+        abi: APS_TOKENABI,
         client,
         chain: defineChain(11155111),
       });
 
+      // Check allowance
       const allowance = await readContract({
         contract: apsTokenContract,
         method: "allowance",
         params: [address, DiamondAddress],
       });
 
-      const requiredAmount = parseEther(apsAmount.toString());
-
-      // If allowance is insufficient, request approval first
-      if (allowance < requiredAmount) {
-        toast.info("Please approve APS token spending first...");
+      // If allowance is insufficient, approve
+      if (allowance < apsAmountInWei) {
+        toast.info("Approving APS tokens...");
 
         const approveTx = await prepareContractCall({
           contract: apsTokenContract,
           method: "approve",
-          params: [DiamondAddress, requiredAmount],
+          params: [DiamondAddress, apsAmountInWei],
         });
 
         await sendTransaction({ transaction: approveTx, account });
 
         toast.update(toastId, {
-          render: "APS tokens approved! Initializing pool...",
+          render: "Approved! Initializing pool...",
           isLoading: true,
         });
       }
 
-      // Now initialize the pool
+      // Initialize pool
       const transaction = await prepareContractCall({
         contract,
         method: "initializePool",
-        params: [requiredAmount],
+        params: [apsAmountInWei],
         value: parseEther("0.1"),
       });
 
       await sendTransaction({ transaction, account });
 
       toast.update(toastId, {
-        render: "✅ APSDEX pool initialized successfully!",
+        render: "✅ Pool initialized successfully!",
         type: "success",
         isLoading: false,
         autoClose: 5000,
       });
-    } catch (err) {
-      console.error("Error initializing APSDEX pool:", err);
 
-      if (
-        err.message?.includes("0xfb8f41b2") ||
-        err.message?.includes("InsufficientBalance")
-      ) {
-        toast.update(toastId, {
-          render:
-            "❌ Token approval failed or insufficient balance. Please check allowance.",
-          type: "error",
-          isLoading: false,
-          autoClose: 5000,
-        });
-      } else {
-        toast.update(toastId, {
-          render: "❌ Failed to initialize APSDEX pool.",
-          type: "error",
-          isLoading: false,
-          autoClose: 5000,
-        });
-      }
-      setError(err);
+      return true;
+    } catch (err) {
+      console.error("Error:", err);
+      toast.update(toastId, {
+        render: `❌ Failed: ${err.message?.slice(0, 80)}`,
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+      });
+      return false;
     } finally {
       setLoading(false);
     }

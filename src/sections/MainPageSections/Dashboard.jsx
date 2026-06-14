@@ -465,13 +465,10 @@ function Dashboard() {
     if (!apsAmount) return;
 
     setApproving(true);
-
     try {
-      // First approve
-      const approved = await approveAPSTokens(parseEther(apsAmount));
-      if (approved) {
-        // Then initialize
-        await initializeAPSDEX(parseEther(apsAmount));
+      // Parse once, pass wei to the function
+      const success = await initializeAPSDEX(parseEther(apsAmount));
+      if (success) {
         setAPSAmount("");
         await refreshData();
       }
