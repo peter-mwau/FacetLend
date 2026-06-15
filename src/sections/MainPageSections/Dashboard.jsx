@@ -335,6 +335,10 @@ function Dashboard() {
     loading: apsdexLoading,
   } = useAPSDEX();
 
+  console.log("Price: ", price);
+  console.log("Current Price: ", getCurrentPrice());
+  console.log("Total Liquidity: ", totalLiquidity);
+
   const [apsAmount, setAPSAmount] = useState("");
   const [showInitPool, setShowInitPool] = useState(false);
 

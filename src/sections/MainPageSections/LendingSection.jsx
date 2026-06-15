@@ -357,15 +357,18 @@ function LendingSection() {
     if (!ethReserves || !tokenReserves) return null;
     const eth = formatReserves(ethReserves);
     const aps = formatReserves(tokenReserves);
-    if (eth === null || aps === null) return null;
-    // Simplified utilization: APS reserves relative to total value
-    const totalValue =
-      eth +
-      aps *
-        (currentPriceFormatted !== "—" ? parseFloat(currentPriceFormatted) : 0);
-    if (totalValue === 0) return 0;
-    return (aps / totalValue) * 100;
-  }, [ethReserves, tokenReserves, currentPriceFormatted]);
+    const price = formatPrice(currentPrice);
+
+    if (eth === null || aps === null || price === null) return null;
+
+    // Calculate total value in ETH
+    const totalValueInETH = eth + aps / price; // Convert APS to ETH
+    if (totalValueInETH === 0) return 0;
+
+    // Utilization = (value of APS) / (total value)
+    const utilization = (aps / price / totalValueInETH) * 100;
+    return utilization;
+  }, [ethReserves, tokenReserves, currentPrice]);
 
   return (
     <div
