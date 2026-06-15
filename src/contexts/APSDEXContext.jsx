@@ -310,6 +310,17 @@ export const APSDEXProvider = ({ children }) => {
   };
 
   /* =====================================================================
+   * HELPER FUNCTIONS
+   * ========================================================================== */
+  const formatPrice = (priceValue) => {
+    if (priceValue === null || priceValue === undefined) return null;
+    const raw =
+      typeof priceValue === "bigint" ? Number(priceValue) : Number(priceValue);
+    const divisor = 10 ** 18;
+    return raw / divisor;
+  };
+
+  /* =====================================================================
    * READ FUNCTIONS
    * ========================================================================== */
 
@@ -336,8 +347,10 @@ export const APSDEXProvider = ({ children }) => {
         method: "currentPrice",
         params: [],
       });
-      setPrice(price);
-      return price;
+      const p = formatPrice(price);
+      if (p !== null ? p.toFixed(6) : "—");
+      setPrice(p);
+      return p;
     } catch (err) {
       // Don't show toast for uninitialized pool
       if (err.message?.includes("APS reserve is zero")) {
