@@ -347,6 +347,15 @@ function Dashboard() {
 
   const [isUserOwner, setIsUserOwner] = useState(false);
 
+  // owner status
+  console.log("Is Owner: ", isOwner);
+  console.log("Owner Address: ", ownerAddress);
+  console.log("Owner: ", isUserOwner);
+  console.log("Price: ", price);
+  console.log("ETH Reserves: ", ethReserves);
+  console.log("Token Reserves: ", tokenReserves);
+  console.log("Get Current Price: ", getCurrentPrice());
+
   const account = useActiveAccount();
   const address = account?.address;
 
@@ -354,7 +363,9 @@ function Dashboard() {
     const checkOwner = async () => {
       if (address) {
         const owner = await getContractOwner();
+        const price = await getCurrentPrice();
         setIsUserOwner(address.toLowerCase() === owner?.toLowerCase());
+        console.log("Current Price: ", price);
       }
     };
     checkOwner();
@@ -371,9 +382,6 @@ function Dashboard() {
       setCheckingPool(false);
     }
   };
-
-  const account = useActiveAccount();
-  const address = account?.address;
 
   const network = import.meta.env.VITE_APP_BLOCKCHAIN_NETWORK
     ? import.meta.env.VITE_APP_BLOCKCHAIN_NETWORK.toUpperCase()

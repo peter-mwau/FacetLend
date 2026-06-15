@@ -16,6 +16,8 @@ import {
   EyeOff,
   PlusCircle,
 } from "lucide-react";
+import { parseEther } from "viem";
+import { toast } from "react-toastify";
 
 function BorrowingSection() {
   const { isDarkMode } = useDarkMode();
@@ -137,34 +139,46 @@ function BorrowingSection() {
   };
 
   const onMintAPS = async () => {
-    const amt = parseInput(mintAmount);
-    if (!amt) return;
-    setLocalLoadingMint(true);
+    if (!mintAmount || mintAmount <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
+    }
+
     try {
+      const amt = parseEther(mintAmount.toString());
+      setLocalLoadingMint(true);
       await mintTokens(address, amt);
       setMintAmount("");
       await refreshHealthFactor();
       await refreshRepayableAmount();
       await refreshTokenBalance();
+      toast.success(`Successfully minted ${mintAmount} APS`);
     } catch (error) {
       console.error("Error minting APS:", error);
+      toast.error("Failed to mint APS tokens");
     } finally {
       setLocalLoadingMint(false);
     }
   };
 
   const onBurnAPS = async () => {
-    const amt = parseInput(burnAmount);
-    if (!amt) return;
-    setLocalLoadingBurn(true);
+    if (!burnAmount || burnAmount <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
+    }
+
     try {
+      const amt = parseEther(burnAmount.toString());
+      setLocalLoadingBurn(true);
       await burnTokens(address, amt);
       setBurnAmount("");
       await refreshHealthFactor();
       await refreshRepayableAmount();
       await refreshTokenBalance();
+      toast.success(`Successfully burned ${burnAmount} APS`);
     } catch (error) {
       console.error("Error burning APS:", error);
+      toast.error("Failed to burn APS tokens");
     } finally {
       setLocalLoadingBurn(false);
     }

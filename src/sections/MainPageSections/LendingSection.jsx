@@ -89,6 +89,17 @@ function LendingSection() {
   const [localLoadingWithdrawPool, setLocalLoadingWithdrawPool] =
     useState(false);
   const [localLoadingPoolData, setLocalLoadingPoolData] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState(null);
+
+  const getPrice = async () => {
+    try {
+      const p = await getCurrentPrice();
+      setCurrentPrice(p);
+    } catch (err) {
+      console.error("Error fetching price:", err);
+      setCurrentPrice(null);
+    }
+  };
 
   const parseInput = (v) => {
     const trimmed = String(v).trim();
@@ -115,10 +126,24 @@ function LendingSection() {
 
   const formatPrice = (priceValue) => {
     if (priceValue === null || priceValue === undefined) return null;
+
+    // Convert from wei (18 decimals) to human readable
     const raw =
       typeof priceValue === "bigint" ? Number(priceValue) : Number(priceValue);
     const divisor = 10 ** 18;
-    return raw / divisor;
+    let ethPerAps = raw / divisor;
+
+    console.log("Raw price (wei):", priceValue.toString());
+    console.log("ETH per APS:", ethPerAps);
+
+    // If ETH per APS is extremely small, it's correct
+    // For your pool: 0.1 ETH / 120,000 APS = 0.000000833 ETH per APS
+    if (ethPerAps > 0) {
+      const apsPerEth = 1 / ethPerAps;
+      console.log("APS per ETH:", apsPerEth);
+      return apsPerEth;
+    }
+    return null;
   };
 
   const refreshHealthFactor = async () => {
@@ -324,8 +349,13 @@ function LendingSection() {
   }, [repayableAmount]);
 
   const currentPriceFormatted = useMemo(() => {
-    const p = formatPrice(price);
-    return p !== null ? p.toFixed(6) : "—";
+    const apsPerEth = formatPrice(price);
+    return apsPerEth !== null
+      ? apsPerEth.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        })
+      : "—";
   }, [price]);
 
   const ethReservesFormatted = useMemo(() => {
@@ -351,6 +381,12 @@ function LendingSection() {
   const collateralETH = positionDetails?.[0]
     ? formatReserves(positionDetails[0])?.toFixed(4)
     : null;
+
+  useEffect(() => {
+    if (address) {
+      getPrice();
+    }
+  }, [address]);
 
   // Calculate pool utilization
   const poolUtilization = useMemo(() => {
