@@ -37,6 +37,8 @@ export const APSDEXProvider = ({ children }) => {
   const [tokenReserves, setTokenReserves] = useState(null);
   const [totalLiquidity, setTotalLiquidity] = useState(null);
   const [providerLiquidity, setProviderLiquidity] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
+  const [ownerAddress, setOwnerAddress] = useState(null);
 
   const contract = getContract({
     address: DiamondAddress,
@@ -548,6 +550,38 @@ export const APSDEXProvider = ({ children }) => {
     }
   };
 
+  // Function to get contract owner
+  const getContractOwner = async () => {
+    try {
+      const owner = await readContract({
+        contract,
+        method: "owner",
+        params: [],
+      });
+      setOwnerAddress(owner);
+
+      // Check if connected wallet is owner
+      if (address && owner) {
+        setIsOwner(address.toLowerCase() === owner.toLowerCase());
+      }
+      return owner;
+    } catch (err) {
+      console.error("Error fetching contract owner:", err);
+      return null;
+    }
+  };
+
+  // Function to check if address is owner
+  const checkIsOwner = async (userAddress) => {
+    if (!userAddress) return false;
+    try {
+      const owner = await getContractOwner();
+      return userAddress.toLowerCase() === owner?.toLowerCase();
+    } catch {
+      return false;
+    }
+  };
+
   return (
     <APSDEXContext.Provider
       value={{
@@ -572,6 +606,10 @@ export const APSDEXProvider = ({ children }) => {
         providerLiquidity,
         loading,
         error,
+        isOwner,
+        ownerAddress,
+        getContractOwner,
+        checkIsOwner,
       }}
     >
       {children}
