@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { ADDRESSES } from "../constants/addresses";
 import APSDEX_ABI from "../artifacts/contracts/facets/ApsdexFacet.sol/ApsdexFacet.json";
 import APS_TOKEN_ABI from "../artifacts/contracts/APS.sol/APS.json";
+import OWNERSHIP_ABI from "../artifacts/contracts/facets/OwnershipFacet.sol/OwnershipFacet.json";
 import { client } from "../services/client";
 import { toast } from "react-toastify";
 import { useActiveAccount } from "thirdweb/react";
@@ -20,6 +21,7 @@ const DiamondAddress = ADDRESSES.MainDiamond;
 const APSAddress = ADDRESSES.APS;
 const APSDEXABI = APSDEX_ABI.abi;
 const APS_TOKENABI = APS_TOKEN_ABI.abi;
+const OWNERSHIPABI_ABI = OWNERSHIP_ABI.abi;
 
 const APSDEXContext = createContext();
 
@@ -553,8 +555,14 @@ export const APSDEXProvider = ({ children }) => {
   // Function to get contract owner
   const getContractOwner = async () => {
     try {
+      const ownershipContract = getContract({
+        address: DiamondAddress,
+        abi: OWNERSHIPABI_ABI,
+        client,
+        chain: defineChain(11155111),
+      });
       const owner = await readContract({
-        contract,
+        contract: ownershipContract,
         method: "owner",
         params: [],
       });

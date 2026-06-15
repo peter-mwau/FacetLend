@@ -49,7 +49,7 @@ export const APSProvider = ({ children }) => {
       const transaction = await prepareContractCall({
         contract,
         method: "mintToken",
-        args: [tokenHolder, amount],
+        params: [tokenHolder, amount],
       });
       await sendTransaction({ transaction, account });
       toast.update(toastId, {
@@ -83,7 +83,7 @@ export const APSProvider = ({ children }) => {
       const transaction = await prepareContractCall({
         contract,
         method: "burnToken",
-        args: [tokenHolder, amount],
+        params: [tokenHolder, amount],
       });
       await sendTransaction({ transaction, account });
       toast.update(toastId, {
@@ -120,7 +120,7 @@ export const APSProvider = ({ children }) => {
       const balance = await readContract({
         contract,
         method: "balanceOf",
-        args: [tokenAddress],
+        params: [tokenAddress],
       });
       setTokenBalance(balance);
       return balance;
