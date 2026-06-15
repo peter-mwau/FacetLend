@@ -333,11 +333,10 @@ function Dashboard() {
     tokenReserves,
     totalLiquidity,
     loading: apsdexLoading,
+    isOwner,
+    ownerAddress,
+    getContractOwner,
   } = useAPSDEX();
-
-  console.log("Price: ", price);
-  console.log("Current Price: ", getCurrentPrice());
-  console.log("Total Liquidity: ", totalLiquidity);
 
   const [apsAmount, setAPSAmount] = useState("");
   const [showInitPool, setShowInitPool] = useState(false);
@@ -345,6 +344,21 @@ function Dashboard() {
   const [isPoolInitialized, setIsPoolInitialized] = useState(false);
   const [checkingPool, setCheckingPool] = useState(true);
   const [approving, setApproving] = useState(false);
+
+  const [isUserOwner, setIsUserOwner] = useState(false);
+
+  const account = useActiveAccount();
+  const address = account?.address;
+
+  useEffect(() => {
+    const checkOwner = async () => {
+      if (address) {
+        const owner = await getContractOwner();
+        setIsUserOwner(address.toLowerCase() === owner?.toLowerCase());
+      }
+    };
+    checkOwner();
+  }, [address]);
 
   // Check if pool is initialized on mount
   const checkPoolInitialization = async () => {
@@ -672,70 +686,75 @@ function Dashboard() {
           </div>
 
           <div>
-            <div
-              className={`p-6 border rounded-xl transition-all duration-300 ${
-                isDarkMode
-                  ? "bg-[#0F111A] border-white/5 hover:border-blue-500/20"
-                  : "bg-white border-black/5 shadow-sm hover:shadow-md"
-              }`}
-            >
-              <button
-                onClick={() => setShowInitPool(!showInitPool)}
-                className="w-full flex items-center justify-between"
+            {/* Only show pool initialization section for contract owner */}
+            {isUserOwner && !isPoolInitialized && (
+              <div
+                className={`p-6 border rounded-xl transition-all duration-300 ${
+                  isDarkMode
+                    ? "bg-[#0F111A] border-white/5 hover:border-blue-500/20"
+                    : "bg-white border-black/5 shadow-sm hover:shadow-md"
+                }`}
               >
-                <div className="flex items-center gap-2">
-                  <Zap size={14} className="text-blue-500" />
-                  <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">
-                    Pool Administration
+                <button
+                  onClick={() => setShowInitPool(!showInitPool)}
+                  className="w-full flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <Zap size={14} className="text-blue-500" />
+                    <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">
+                      Pool Administration
+                    </span>
+                  </div>
+                  <span className="text-gray-500">
+                    {showInitPool ? "▼" : "▶"}
                   </span>
-                </div>
-                <span className="text-gray-500">
-                  {showInitPool ? "▼" : "▶"}
-                </span>
-              </button>
+                </button>
 
-              <AnimatePresence>
-                {showInitPool && (
-                  <motion.form
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    onSubmit={handleInitializePool}
-                    className="overflow-hidden mt-4"
-                  >
-                    <div className="space-y-3">
-                      <p className="text-[10px] text-gray-500">
-                        Initialize APSDEX pool with initial APS liquidity
-                      </p>
-                      <input
-                        type="number"
-                        step="0.01"
-                        placeholder="APS amount"
-                        value={apsAmount}
-                        onChange={(e) => setAPSAmount(e.target.value)}
-                        className={`w-full p-3 rounded-lg border outline-none text-sm font-mono ${
-                          isDarkMode
-                            ? "bg-[#090A0F] border-white/5 text-white focus:border-blue-500/50"
-                            : "bg-white border-black/5 text-gray-950 focus:border-blue-500/50"
-                        }`}
-                      />
-                      <button
-                        type="submit"
-                        disabled={!apsAmount || apsdexLoading}
-                        className={`w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
-                          !apsAmount || apsdexLoading
-                            ? "bg-gray-500/20 cursor-not-allowed"
-                            : "bg-blue-500 hover:bg-blue-600 text-white"
-                        }`}
-                      >
-                        {apsdexLoading ? "Initializing..." : "Initialize Pool"}
-                      </button>
-                    </div>
-                  </motion.form>
-                )}
-              </AnimatePresence>
-            </div>
+                <AnimatePresence>
+                  {showInitPool && (
+                    <motion.form
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      onSubmit={handleInitializePool}
+                      className="overflow-hidden mt-4"
+                    >
+                      <div className="space-y-3">
+                        <p className="text-[10px] text-gray-500">
+                          Initialize APSDEX pool with initial APS liquidity
+                        </p>
+                        <input
+                          type="number"
+                          step="0.01"
+                          placeholder="APS amount"
+                          value={apsAmount}
+                          onChange={(e) => setAPSAmount(e.target.value)}
+                          className={`w-full p-3 rounded-lg border outline-none text-sm font-mono ${
+                            isDarkMode
+                              ? "bg-[#090A0F] border-white/5 text-white focus:border-blue-500/50"
+                              : "bg-white border-black/5 text-gray-950 focus:border-blue-500/50"
+                          }`}
+                        />
+                        <button
+                          type="submit"
+                          disabled={!apsAmount || apsdexLoading}
+                          className={`w-full py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 ${
+                            !apsAmount || apsdexLoading
+                              ? "bg-gray-500/20 cursor-not-allowed"
+                              : "bg-blue-500 hover:bg-blue-600 text-white"
+                          }`}
+                        >
+                          {apsdexLoading
+                            ? "Initializing..."
+                            : "Initialize Pool"}
+                        </button>
+                      </div>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
           </div>
         </div>
 
