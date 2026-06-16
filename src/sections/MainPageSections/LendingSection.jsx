@@ -247,7 +247,9 @@ function LendingSection() {
     if (!amt) return;
     setLocalLoadingWithdraw(true);
     try {
-      await withdrawCollateral(amt);
+      // Convert to wei (18 decimals) before passing
+      const amtInWei = parseEther(amt.toString());
+      await withdrawCollateral(amtInWei);
       setWithdrawAmount("");
       await Promise.all([
         refreshHealthFactor(),
