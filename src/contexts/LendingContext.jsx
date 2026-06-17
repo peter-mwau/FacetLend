@@ -41,6 +41,7 @@ export function LendingProvider({ children }) {
   const [yieldAmount, setYieldAmount] = useState(null);
   const [repayableAmount, setRepayableAmount] = useState(null);
   const [positionDetails, setPositionDetails] = useState(null);
+  const [lendingPoolStats, setLendingPoolStats] = useState(null);
 
   const contract = useMemo(
     () =>
@@ -556,6 +557,32 @@ export function LendingProvider({ children }) {
     }
   };
 
+  //function to get lending pool stats
+  const getLendingPoolStats = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      if (!client) {
+        throw new Error("Thirdweb client not configured");
+      }
+
+      const stats = await readContract({
+        contract,
+        method: "getLendingPoolStats",
+        params: [],
+      });
+
+      setLendingPoolStats(stats);
+      return stats;
+    } catch (err) {
+      console.error("Error getting lending pool stats:", err);
+      setError(err.message || "Failed to get lending pool stats");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // eslint-disable-next-line react-hooks/immutability
   LendingProvider.propTypes = {
     children: PropTypes.node.isRequired,
@@ -586,6 +613,8 @@ export function LendingProvider({ children }) {
         yieldAmount,
         repayableAmount,
         positionDetails,
+        lendingPoolStats,
+        getLendingPoolStats,
       }}
     >
       {children}

@@ -347,17 +347,16 @@ function Dashboard() {
 
   const [isUserOwner, setIsUserOwner] = useState(false);
 
-  // owner status
-  console.log("Is Owner: ", isOwner);
-  console.log("Owner Address: ", ownerAddress);
-  console.log("Owner: ", isUserOwner);
-  console.log("Price: ", price);
-  console.log("ETH Reserves: ", ethReserves);
-  console.log("Token Reserves: ", tokenReserves);
-  console.log("Get Current Price: ", getCurrentPrice());
-
   const account = useActiveAccount();
   const address = account?.address;
+
+  // useEffect(() => {
+  //   const ff = async () => {
+  //     const position = await getPositionDetails(address);
+  //     console.log("User Position: ", position);
+  //   };
+  //   ff();
+  // }, [address]);
 
   useEffect(() => {
     const checkOwner = async () => {

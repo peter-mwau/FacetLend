@@ -14,6 +14,7 @@ import SettingsSection from "../../sections/MainPageSections/SettingsSection";
 
 import MasterPageNavbar from "../../components/MainPageComponents/MainPageNavbar";
 import MainPageSidebar from "../../components/MainPageComponents/MainPageSidebar";
+import { BorrowingCalculator } from "../../sections/MainPageSections/BorrowingCalculator";
 
 function MainContent({ activeSection, onSectionChange }) {
   const { isDarkMode } = useDarkMode();
@@ -29,7 +30,7 @@ function MainContent({ activeSection, onSectionChange }) {
       case "flashloan":
         return <FlashloanSection />;
       case "positions":
-        return <MintAPSSection />;
+        return <BorrowingCalculator />;
       case "health":
         return <MovePriceSection />;
       case "settings":
