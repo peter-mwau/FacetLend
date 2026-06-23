@@ -1,4 +1,3 @@
-// components/sections/BorrowingCalculator.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { useAPSDEX } from "../../contexts/APSDEXContext";
@@ -345,16 +344,16 @@ export function BorrowingCalculator() {
       return;
     }
 
-    const borrowAPS = parseFloat(borrowAmount);
+    const borrowAPSAmount = parseFloat(borrowAmount);
     const maxBorrow = borrowingPower?.maxBorrowAPS || 0;
 
-    if (borrowAPS > maxBorrow) {
+    if (borrowAPSAmount > maxBorrow) {
       alert(`You can only borrow up to ${maxBorrow.toLocaleString()} APS`);
       return;
     }
 
     try {
-      const amountInWei = parseEther(borrowAPS.toString());
+      const amountInWei = parseEther(borrowAPSAmount.toString());
       await borrowAPS(amountInWei);
       // Refresh position
       await fetchUserPosition();
@@ -408,14 +407,18 @@ export function BorrowingCalculator() {
       className={`p-6 border rounded-xl ${
         isDarkMode
           ? "bg-[#0F111A] border-white/5"
-          : "bg-white border-black/5 shadow-sm"
+          : "bg-white border-gray-200 shadow-sm"
       }`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Calculator size={16} className="text-blue-500" />
-          <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">
+          <span
+            className={`text-[10px] uppercase font-bold tracking-wider ${
+              isDarkMode ? "text-gray-400" : "text-gray-600"
+            }`}
+          >
             Borrowing Power Calculator
           </span>
         </div>
@@ -423,7 +426,11 @@ export function BorrowingCalculator() {
           <button
             onClick={fetchUserPosition}
             disabled={isLoadingPosition}
-            className="text-[9px] px-2 py-1 rounded border border-white/5 text-gray-400 hover:bg-white/5 flex items-center gap-1"
+            className={`text-[9px] px-2 py-1 rounded border flex items-center gap-1 transition-colors ${
+              isDarkMode
+                ? "border-white/5 text-gray-400 hover:bg-white/5"
+                : "border-gray-200 text-gray-600 hover:bg-gray-100"
+            }`}
           >
             <RefreshCw
               size={10}
@@ -451,38 +458,60 @@ export function BorrowingCalculator() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
             <div>
-              <div className="text-[8px] text-gray-500">Collateral</div>
-              <div className="text-sm font-bold">
+              <div
+                className={`text-[8px] ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}
+              >
+                Collateral
+              </div>
+              <div
+                className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}
+              >
                 {userPosition.collateralETH.toFixed(4)} ETH
               </div>
             </div>
             <div>
-              <div className="text-[8px] text-gray-500">Borrowed</div>
-              <div className="text-sm font-bold">
+              <div
+                className={`text-[8px] ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}
+              >
+                Borrowed
+              </div>
+              <div
+                className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}
+              >
                 {userPosition.borrowedAPS.toLocaleString()} APS
               </div>
             </div>
             <div>
-              <div className="text-[8px] text-gray-500">Health Factor</div>
+              <div
+                className={`text-[8px] ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}
+              >
+                Health Factor
+              </div>
               <div
                 className={`text-sm font-bold ${
                   healthFactor
                     ? Number(healthFactor) > 1e18
                       ? "text-emerald-400"
-                      : "text-yellow-400"
-                    : "text-gray-400"
+                      : "text-yellow-500"
+                    : isDarkMode
+                      ? "text-gray-400"
+                      : "text-gray-400"
                 }`}
               >
                 {healthFactor ? (Number(healthFactor) / 1e18).toFixed(2) : "—"}
               </div>
             </div>
             <div>
-              <div className="text-[8px] text-gray-500">Status</div>
+              <div
+                className={`text-[8px] ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}
+              >
+                Status
+              </div>
               <div
                 className={`text-sm font-bold ${
                   userPosition.riskTimestamp > 0
-                    ? "text-red-400"
-                    : "text-emerald-400"
+                    ? "text-red-500"
+                    : "text-emerald-500"
                 }`}
               >
                 {userPosition.riskTimestamp > 0 ? "⚠️ At Risk" : "✅ Safe"}
@@ -495,7 +524,11 @@ export function BorrowingCalculator() {
       {/* Input Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="text-[10px] uppercase text-gray-500 block mb-2">
+          <label
+            className={`text-[10px] uppercase block mb-2 ${
+              isDarkMode ? "text-gray-500" : "text-gray-600"
+            }`}
+          >
             Collateral Amount (ETH)
           </label>
           <div className="relative flex items-center">
@@ -507,18 +540,24 @@ export function BorrowingCalculator() {
               className={`w-full p-3 rounded-lg border outline-none font-mono ${
                 isDarkMode
                   ? "bg-[#090A0F] border-white/5 text-white focus:border-blue-500/50"
-                  : "bg-white border-black/5 text-gray-950 focus:border-blue-500/50"
+                  : "bg-white border-gray-200 text-gray-900 focus:border-blue-500"
               }`}
               placeholder="Enter ETH amount"
             />
-            <span className="absolute right-4 text-sm text-gray-500">ETH</span>
+            <span
+              className={`absolute right-4 text-sm ${
+                isDarkMode ? "text-gray-500" : "text-gray-400"
+              }`}
+            >
+              ETH
+            </span>
           </div>
           {userPosition && userPosition.collateralETH > 0 && (
             <button
               onClick={() => {
                 setCollateralAmount(userPosition.collateralETH.toString());
               }}
-              className="text-[9px] text-blue-400 hover:text-blue-300 mt-1"
+              className="text-[9px] text-blue-500 hover:text-blue-600 mt-1"
             >
               Use current collateral ({userPosition.collateralETH.toFixed(4)}{" "}
               ETH)
@@ -554,12 +593,26 @@ export function BorrowingCalculator() {
             className="space-y-4"
           >
             {/* Market Conditions */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-3 rounded-lg border border-blue-500/20 bg-blue-500/5">
+            <div
+              className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-3 rounded-lg border ${
+                isDarkMode
+                  ? "border-blue-500/20 bg-blue-500/5"
+                  : "border-blue-200 bg-blue-50"
+              }`}
+            >
               <div>
-                <div className="text-[8px] text-gray-500 uppercase">
+                <div
+                  className={`text-[8px] uppercase ${
+                    isDarkMode ? "text-gray-500" : "text-gray-500"
+                  }`}
+                >
                   Current Price
                 </div>
-                <div className="text-sm font-bold text-blue-400">
+                <div
+                  className={`text-sm font-bold ${
+                    isDarkMode ? "text-blue-400" : "text-blue-600"
+                  }`}
+                >
                   {borrowingPower.currentPrice.toLocaleString(undefined, {
                     maximumFractionDigits: 0,
                   })}{" "}
@@ -569,10 +622,18 @@ export function BorrowingCalculator() {
                 </div>
               </div>
               <div>
-                <div className="text-[8px] text-gray-500 uppercase">
+                <div
+                  className={`text-[8px] uppercase ${
+                    isDarkMode ? "text-gray-500" : "text-gray-500"
+                  }`}
+                >
                   Collateral
                 </div>
-                <div className="text-sm font-bold">
+                <div
+                  className={`text-sm font-bold ${
+                    isDarkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
                   {borrowingPower.collateralETH.toFixed(4)}{" "}
                   <span className="text-[10px] font-normal text-gray-500">
                     ETH
@@ -580,10 +641,14 @@ export function BorrowingCalculator() {
                 </div>
               </div>
               <div>
-                <div className="text-[8px] text-gray-500 uppercase">
+                <div
+                  className={`text-[8px] uppercase ${
+                    isDarkMode ? "text-gray-500" : "text-gray-500"
+                  }`}
+                >
                   Current Borrowed
                 </div>
-                <div className="text-sm font-bold text-yellow-400">
+                <div className="text-sm font-bold text-yellow-500">
                   {borrowingPower.currentBorrowed.toLocaleString(undefined, {
                     maximumFractionDigits: 0,
                   })}{" "}
@@ -593,16 +658,20 @@ export function BorrowingCalculator() {
                 </div>
               </div>
               <div>
-                <div className="text-[8px] text-gray-500 uppercase">
+                <div
+                  className={`text-[8px] uppercase ${
+                    isDarkMode ? "text-gray-500" : "text-gray-500"
+                  }`}
+                >
                   Health Factor
                 </div>
                 <div
                   className={`text-sm font-bold ${
                     borrowingPower.currentHF >= 2
-                      ? "text-emerald-400"
+                      ? "text-emerald-500"
                       : borrowingPower.currentHF >= 1.5
-                        ? "text-yellow-400"
-                        : "text-red-400"
+                        ? "text-yellow-500"
+                        : "text-red-500"
                   }`}
                 >
                   {borrowingPower.currentHF === Infinity
@@ -623,12 +692,16 @@ export function BorrowingCalculator() {
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle size={12} className="text-emerald-400" />
-                  <span className="text-[9px] font-bold text-emerald-400">
+                  <CheckCircle size={12} className="text-emerald-500" />
+                  <span className="text-[9px] font-bold text-emerald-500">
                     Maximum Borrow
                   </span>
                 </div>
-                <div className="text-xl font-bold">
+                <div
+                  className={`text-xl font-bold ${
+                    isDarkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
                   {borrowingPower.maxBorrowAPS.toLocaleString(undefined, {
                     maximumFractionDigits: 0,
                   })}
@@ -636,13 +709,17 @@ export function BorrowingCalculator() {
                     APS
                   </span>
                 </div>
-                <div className="text-[9px] text-gray-500 mt-1">
+                <div
+                  className={`text-[9px] mt-1 ${
+                    isDarkMode ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
                   {borrowingPower.maxBorrowETH.toFixed(4)} ETH (120% collateral
                   ratio)
                 </div>
                 <div className="text-[9px] mt-1">
                   <span
-                    className={`${borrowingPower.maxBorrowHF >= 1 ? "text-emerald-400" : "text-red-400"}`}
+                    className={`${borrowingPower.maxBorrowHF >= 1 ? "text-emerald-500" : "text-red-500"}`}
                   >
                     HF:{" "}
                     {borrowingPower.maxBorrowHF === Infinity
@@ -661,12 +738,16 @@ export function BorrowingCalculator() {
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <TrendingUp size={12} className="text-blue-400" />
-                  <span className="text-[9px] font-bold text-blue-400">
+                  <TrendingUp size={12} className="text-blue-500" />
+                  <span className="text-[9px] font-bold text-blue-500">
                     Optimal Borrow (70%)
                   </span>
                 </div>
-                <div className="text-xl font-bold text-blue-400">
+                <div
+                  className={`text-xl font-bold ${
+                    isDarkMode ? "text-blue-400" : "text-blue-600"
+                  }`}
+                >
                   {borrowingPower.optimalBorrowAPS.toLocaleString(undefined, {
                     maximumFractionDigits: 0,
                   })}
@@ -674,11 +755,15 @@ export function BorrowingCalculator() {
                     APS
                   </span>
                 </div>
-                <div className="text-[9px] text-gray-500 mt-1">
+                <div
+                  className={`text-[9px] mt-1 ${
+                    isDarkMode ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
                   Safer position with better health factor
                 </div>
                 <div className="text-[9px] mt-1">
-                  <span className="text-emerald-400">
+                  <span className="text-emerald-500">
                     HF:{" "}
                     {borrowingPower.optimalBorrowHF === Infinity
                       ? "∞"
@@ -699,14 +784,18 @@ export function BorrowingCalculator() {
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <AlertTriangle size={12} className="text-yellow-400" />
-                  <span className="text-[9px] font-bold text-yellow-400">
+                  <AlertTriangle size={12} className="text-yellow-500" />
+                  <span className="text-[9px] font-bold text-yellow-500">
                     Liquidation Warning
                   </span>
                 </div>
-                <div className="text-[10px] text-gray-400 mt-1">
+                <div
+                  className={`text-[10px] mt-1 ${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
                   Position would liquidate if APS/ETH price drops below{" "}
-                  <span className="font-bold text-yellow-400">
+                  <span className="font-bold text-yellow-500">
                     {borrowingPower.liquidationPrice.toFixed(4)}
                   </span>{" "}
                   (at max borrow)
@@ -717,12 +806,18 @@ export function BorrowingCalculator() {
             {/* Borrow Form */}
             <div
               className={`p-3 rounded-lg border ${
-                isDarkMode ? "border-white/5" : "border-black/5"
+                isDarkMode ? "border-white/5" : "border-gray-200"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <DollarSign size={12} className="text-emerald-400" />
-                <span className="text-[9px] font-bold">Borrow APS</span>
+                <DollarSign size={12} className="text-emerald-500" />
+                <span
+                  className={`text-[9px] font-bold ${
+                    isDarkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Borrow APS
+                </span>
               </div>
               <div className="flex gap-2">
                 <div className="relative flex-1">
@@ -734,7 +829,7 @@ export function BorrowingCalculator() {
                     className={`w-full p-2 rounded-lg border outline-none font-mono text-sm ${
                       isDarkMode
                         ? "bg-[#090A0F] border-white/5 text-white focus:border-blue-500/50"
-                        : "bg-white border-black/5 text-gray-950 focus:border-blue-500/50"
+                        : "bg-white border-gray-200 text-gray-900 focus:border-blue-500"
                     }`}
                     placeholder="Amount in APS"
                   />
@@ -751,7 +846,7 @@ export function BorrowingCalculator() {
                 onClick={() =>
                   setBorrowAmount(borrowingPower.optimalBorrowAPS.toString())
                 }
-                className="text-[8px] text-blue-400 hover:text-blue-300 mt-1"
+                className="text-[8px] text-blue-500 hover:text-blue-600 mt-1"
               >
                 Use optimal amount
               </button>
@@ -760,37 +855,47 @@ export function BorrowingCalculator() {
             {/* Swap Simulation */}
             <div
               className={`p-3 rounded-lg border ${
-                isDarkMode ? "border-white/5" : "border-black/5"
+                isDarkMode ? "border-white/5" : "border-gray-200"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <Zap size={12} className="text-purple-400" />
-                <span className="text-[9px] font-bold">Swap Simulation</span>
-                <span className="text-[8px] text-gray-500 ml-2">
+                <Zap size={12} className="text-purple-500" />
+                <span
+                  className={`text-[9px] font-bold ${
+                    isDarkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Swap Simulation
+                </span>
+                <span
+                  className={`text-[8px] ml-2 ${
+                    isDarkMode ? "text-gray-500" : "text-gray-400"
+                  }`}
+                >
                   How swapping affects your position
                 </span>
               </div>
               <div className="flex gap-2 mb-2">
                 <button
                   onClick={() => setSwapDirection("ethToAps")}
-                  className={`px-3 py-1 text-[9px] font-bold rounded ${
+                  className={`px-3 py-1 text-[9px] font-bold rounded transition-colors ${
                     swapDirection === "ethToAps"
                       ? "bg-blue-500 text-white"
                       : isDarkMode
-                        ? "bg-white/5"
-                        : "bg-black/5"
+                        ? "bg-white/5 text-gray-400 hover:bg-white/10"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
                   ETH → APS
                 </button>
                 <button
                   onClick={() => setSwapDirection("apsToEth")}
-                  className={`px-3 py-1 text-[9px] font-bold rounded ${
+                  className={`px-3 py-1 text-[9px] font-bold rounded transition-colors ${
                     swapDirection === "apsToEth"
                       ? "bg-blue-500 text-white"
                       : isDarkMode
-                        ? "bg-white/5"
-                        : "bg-black/5"
+                        ? "bg-white/5 text-gray-400 hover:bg-white/10"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
                   APS → ETH
@@ -806,7 +911,7 @@ export function BorrowingCalculator() {
                     className={`w-full p-2 rounded-lg border outline-none font-mono text-sm ${
                       isDarkMode
                         ? "bg-[#090A0F] border-white/5 text-white focus:border-blue-500/50"
-                        : "bg-white border-black/5 text-gray-950 focus:border-blue-500/50"
+                        : "bg-white border-gray-200 text-gray-900 focus:border-blue-500"
                     }`}
                     placeholder={`Amount in ${swapDirection === "ethToAps" ? "ETH" : "APS"}`}
                   />
@@ -826,7 +931,11 @@ export function BorrowingCalculator() {
                     swapAmounts[Math.floor(Math.random() * swapAmounts.length)];
                   setSwapAmount(random);
                 }}
-                className="text-[8px] text-gray-500 hover:text-gray-400 mt-1"
+                className={`text-[8px] mt-1 ${
+                  isDarkMode
+                    ? "text-gray-500 hover:text-gray-400"
+                    : "text-gray-400 hover:text-gray-600"
+                }`}
               >
                 Quick amounts: 0.01 | 0.05 | 0.1 | 0.5 ETH
               </button>
@@ -840,14 +949,30 @@ export function BorrowingCalculator() {
                 >
                   <div className="grid grid-cols-2 gap-2 text-[9px]">
                     <div>
-                      <span className="text-gray-500">ETH Swapped:</span>
-                      <span className="ml-1 font-bold">
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        ETH Swapped:
+                      </span>
+                      <span
+                        className={`ml-1 font-bold ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         {borrowingPower.swapSimulation.ethSwapped} ETH
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-500">APS Received:</span>
-                      <span className="ml-1 font-bold text-emerald-400">
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        APS Received:
+                      </span>
+                      <span className="ml-1 font-bold text-emerald-500">
                         {borrowingPower.swapSimulation.apsReceived.toLocaleString(
                           undefined,
                           { maximumFractionDigits: 0 },
@@ -856,36 +981,56 @@ export function BorrowingCalculator() {
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-500">New Price:</span>
-                      <span className="ml-1 font-bold">
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        New Price:
+                      </span>
+                      <span
+                        className={`ml-1 font-bold ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         {borrowingPower.swapSimulation.newPriceAPS.toFixed(4)}{" "}
                         APS/ETH
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Price Impact:</span>
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        Price Impact:
+                      </span>
                       <span
                         className={`ml-1 font-bold ${
                           Math.abs(borrowingPower.swapSimulation.priceImpact) >
                           5
-                            ? "text-red-400"
-                            : "text-yellow-400"
+                            ? "text-red-500"
+                            : "text-yellow-500"
                         }`}
                       >
                         {borrowingPower.swapSimulation.priceImpact.toFixed(2)}%
                       </span>
                     </div>
                     <div className="col-span-2">
-                      <span className="text-gray-500">
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
                         New Health Factor (if borrowing):
                       </span>
                       <span
                         className={`ml-1 font-bold ${
                           borrowingPower.swapSimulation.newHealthFactor >= 1.5
-                            ? "text-emerald-400"
+                            ? "text-emerald-500"
                             : borrowingPower.swapSimulation.newHealthFactor >= 1
-                              ? "text-yellow-400"
-                              : "text-red-400"
+                              ? "text-yellow-500"
+                              : "text-red-500"
                         }`}
                       >
                         {borrowingPower.swapSimulation.newHealthFactor.toFixed(
@@ -902,10 +1047,10 @@ export function BorrowingCalculator() {
             {/* Toggle Breakdown */}
             <button
               onClick={() => setShowBreakdown(!showBreakdown)}
-              className={`w-full text-[9px] uppercase tracking-wider p-2 rounded border ${
+              className={`w-full text-[9px] uppercase tracking-wider p-2 rounded border transition-colors ${
                 isDarkMode
-                  ? "border-white/5 hover:bg-white/5"
-                  : "border-black/5 hover:bg-black/5"
+                  ? "border-white/5 hover:bg-white/5 text-gray-400"
+                  : "border-gray-200 hover:bg-gray-50 text-gray-600"
               }`}
             >
               {showBreakdown ? "▼ Hide" : "▶ Show"} Calculation Breakdown
@@ -923,26 +1068,60 @@ export function BorrowingCalculator() {
                     className={`p-3 rounded-lg border text-[9px] space-y-1 ${
                       isDarkMode
                         ? "border-white/5 bg-black/20"
-                        : "border-black/5 bg-gray-50"
+                        : "border-gray-200 bg-gray-50"
                     }`}
                   >
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Collateral:</span>
-                      <span>{borrowingPower.collateralETH.toFixed(4)} ETH</span>
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        Collateral:
+                      </span>
+                      <span
+                        className={isDarkMode ? "text-white" : "text-gray-900"}
+                      >
+                        {borrowingPower.collateralETH.toFixed(4)} ETH
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Current Price:</span>
-                      <span>
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        Current Price:
+                      </span>
+                      <span
+                        className={isDarkMode ? "text-white" : "text-gray-900"}
+                      >
                         {borrowingPower.currentPrice.toFixed(4)} APS/ETH
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Collateral Ratio:</span>
-                      <span>120%</span>
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        Collateral Ratio:
+                      </span>
+                      <span
+                        className={isDarkMode ? "text-white" : "text-gray-900"}
+                      >
+                        120%
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Max Borrow:</span>
-                      <span className="font-bold text-emerald-400">
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        Max Borrow:
+                      </span>
+                      <span className="font-bold text-emerald-500">
                         {borrowingPower.maxBorrowAPS.toLocaleString(undefined, {
                           maximumFractionDigits: 0,
                         })}{" "}
@@ -950,10 +1129,16 @@ export function BorrowingCalculator() {
                       </span>
                     </div>
                     <div className="flex justify-between pt-1 border-t border-white/5">
-                      <span className="text-gray-500">
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
                         Health Factor (max):
                       </span>
-                      <span>
+                      <span
+                        className={isDarkMode ? "text-white" : "text-gray-900"}
+                      >
                         {borrowingPower.maxBorrowHF === Infinity
                           ? "∞"
                           : borrowingPower.maxBorrowHF.toFixed(2)}
@@ -961,16 +1146,32 @@ export function BorrowingCalculator() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Liquidation Price:</span>
-                      <span className="font-bold text-yellow-400">
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-500" : "text-gray-500"
+                        }
+                      >
+                        Liquidation Price:
+                      </span>
+                      <span className="font-bold text-yellow-500">
                         {borrowingPower.liquidationPrice.toFixed(4)} APS/ETH
                       </span>
                     </div>
                     {userPosition && (
                       <>
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Risk Timestamp:</span>
-                          <span>
+                          <span
+                            className={
+                              isDarkMode ? "text-gray-500" : "text-gray-500"
+                            }
+                          >
+                            Risk Timestamp:
+                          </span>
+                          <span
+                            className={
+                              isDarkMode ? "text-white" : "text-gray-900"
+                            }
+                          >
                             {userPosition.riskTimestamp > 0
                               ? new Date(
                                   userPosition.riskTimestamp * 1000,
@@ -979,10 +1180,18 @@ export function BorrowingCalculator() {
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-500">
+                          <span
+                            className={
+                              isDarkMode ? "text-gray-500" : "text-gray-500"
+                            }
+                          >
                             Stake Timestamp:
                           </span>
-                          <span>
+                          <span
+                            className={
+                              isDarkMode ? "text-white" : "text-gray-900"
+                            }
+                          >
                             {userPosition.stakeTimestamp > 0
                               ? new Date(
                                   userPosition.stakeTimestamp * 1000,
@@ -1002,3 +1211,5 @@ export function BorrowingCalculator() {
     </div>
   );
 }
+
+export default BorrowingCalculator;
