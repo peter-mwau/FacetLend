@@ -263,7 +263,7 @@ const InfoRow = ({ label, value, isDarkMode, highlight, valueColor }) => (
   </div>
 );
 
-// 4. Pool Statistics Card
+// 4. Pool Statistics Card - CORRECTED
 const PoolStatsCard = ({
   ethReserves,
   tokenReserves,
@@ -278,18 +278,32 @@ const PoolStatsCard = ({
     return num.toFixed(4);
   };
 
-  // Calculate APS per ETH for better display
+  // Price from contract is already APS per ETH with 18 decimals
   const getAPSPerETH = () => {
     if (!price) return 0;
     const raw = typeof price === "bigint" ? Number(price) : Number(price);
-    const ethPerAps = raw / 1e18;
-    if (ethPerAps > 0) {
-      return 1 / ethPerAps;
+
+    // The contract returns price with 18 decimals
+    // But the frontend might be getting it as a raw number
+    // Check if it's already formatted or needs conversion
+    if (raw > 1e18) {
+      // It's in wei format (large number)
+      return raw / 1e18;
+    } else {
+      // It's already the raw price
+      return raw;
     }
-    return 0;
   };
 
   const apsPerETH = getAPSPerETH();
+
+  // Calculate ETH per APS
+  const getETHPerAPS = () => {
+    if (apsPerETH === 0) return 0;
+    return 1 / apsPerETH;
+  };
+
+  const ethPerAPS = getETHPerAPS();
 
   return (
     <div
@@ -315,10 +329,18 @@ const PoolStatsCard = ({
           <div className="flex justify-between items-center">
             <span className="text-[10px] text-gray-500">APS/ETH Price</span>
             <span className="text-sm font-bold text-emerald-400">
-              {apsPerETH.toLocaleString(undefined, {
-                maximumFractionDigits: 0,
-              })}{" "}
+              {apsPerETH >= 1
+                ? apsPerETH.toLocaleString(undefined, {
+                    maximumFractionDigits: 0,
+                  })
+                : apsPerETH.toFixed(6)}{" "}
               <span className="text-[10px] font-normal text-gray-500">APS</span>
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-[10px] text-gray-500">ETH/APS Price</span>
+            <span className="text-sm font-mono text-blue-400">
+              {ethPerAPS.toFixed(12)} ETH
             </span>
           </div>
           <div className="flex justify-between items-center">
@@ -357,11 +379,17 @@ const BorrowingPowerSummary = ({
   const getAPSPerETH = () => {
     if (!price) return 0;
     const raw = typeof price === "bigint" ? Number(price) : Number(price);
-    const ethPerAps = raw / 1e18;
-    if (ethPerAps > 0) {
-      return 1 / ethPerAps;
+
+    // The contract returns price with 18 decimals
+    // But the frontend might be getting it as a raw number
+    // Check if it's already formatted or needs conversion
+    if (raw > 1e18) {
+      // It's in wei format (large number)
+      return raw / 1e18;
+    } else {
+      // It's already the raw price
+      return raw;
     }
-    return 0;
   };
 
   const apsPerETH = getAPSPerETH();
@@ -549,6 +577,14 @@ function Dashboard() {
     ? import.meta.env.VITE_APP_BLOCKCHAIN_NETWORK.toUpperCase()
     : "SEPOLIA";
 
+  // Debug price
+  console.log("Raw price (wei):", price?.toString());
+  if (price) {
+    const apsPerETH = Number(price) / 1e18;
+    console.log("APS per ETH:", apsPerETH);
+    console.log("ETH per APS:", 1 / apsPerETH);
+  }
+
   // Fetch user position - EXACT same as BorrowingCalculator
   const fetchUserPosition = async () => {
     if (!address) return;
@@ -722,11 +758,17 @@ function Dashboard() {
   const getAPSPerETH = () => {
     if (!price) return 0;
     const raw = typeof price === "bigint" ? Number(price) : Number(price);
-    const ethPerAps = raw / 1e18;
-    if (ethPerAps > 0) {
-      return 1 / ethPerAps;
+
+    // The contract returns price with 18 decimals
+    // But the frontend might be getting it as a raw number
+    // Check if it's already formatted or needs conversion
+    if (raw > 1e18) {
+      // It's in wei format (large number)
+      return raw / 1e18;
+    } else {
+      // It's already the raw price
+      return raw;
     }
-    return 0;
   };
 
   const apsPerETH = getAPSPerETH();
