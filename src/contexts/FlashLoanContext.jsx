@@ -49,10 +49,10 @@ export const FlashLoanProvider = ({ children }) => {
     const toastId = toast.loading("Initializing flash loan...");
     setError(null);
     if (!address) {
-        toast.error("Please connect your wallet to initialize flash loan.");
-        setLoadingInitializingFlashLoan(false);
-        toast.dismiss(toastId);
-        return;
+      toast.error("Please connect your wallet to initialize flash loan.");
+      setLoadingInitializingFlashLoan(false);
+      toast.dismiss(toastId);
+      return;
     }
 
     try {
@@ -165,7 +165,7 @@ export const FlashLoanProvider = ({ children }) => {
     try {
       const balance = await readContract({
         contract,
-        method: "getContractTokenBalance",
+        method: "getBalance", // ✅ Changed from "getContractTokenBalance" to "getBalance"
         params: [tokenAddress],
       });
       setTokenBalance(balance);
@@ -173,6 +173,7 @@ export const FlashLoanProvider = ({ children }) => {
     } catch (err) {
       console.error("Error getting flash loan contract balance:", err);
       setError("Failed to get flash loan contract balance. Please try again.");
+      return null;
     }
   };
 
