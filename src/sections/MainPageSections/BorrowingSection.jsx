@@ -6,7 +6,6 @@ import { useActiveAccount } from "thirdweb/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAPS } from "../../hooks/useAPS";
 import {
-  Layers,
   ArrowDownLeft,
   ArrowUpRight,
   ShieldCheck,
@@ -36,11 +35,8 @@ function BorrowingSection() {
     getRepayableAmount,
     getPositionDetails,
     loading,
-    healthFactor: contextHealthFactor,
-    repayableAmount: contextRepayableAmount,
-    positionDetails,
   } = useLending();
-  const { price } = useAPSDEX();
+  const { price, getCurrentPrice } = useAPSDEX();
 
   const { mintTokens, burnTokens, getTokenBalance } = useAPS();
 
@@ -146,6 +142,7 @@ function BorrowingSection() {
 
   const refreshAll = async () => {
     await Promise.all([
+      getCurrentPrice(),
       fetchUserPosition(),
       refreshHealthFactor(),
       refreshRepayableAmount(),
@@ -154,8 +151,26 @@ function BorrowingSection() {
   };
 
   useEffect(() => {
-    if (!address) return;
-    refreshAll();
+    let cancelled = false;
+
+    const syncState = async () => {
+      await Promise.all([
+        getCurrentPrice(),
+        fetchUserPosition(),
+        refreshHealthFactor(),
+        refreshRepayableAmount(),
+        refreshTokenBalance(),
+      ]);
+    };
+
+    if (!cancelled) {
+      void syncState();
+    }
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   // Add Collateral
@@ -487,7 +502,7 @@ function BorrowingSection() {
         <div
           className={`p-5 border rounded-lg ${
             isDarkMode
-              ? "bg-white/[0.01] border-white/5"
+              ? "bg-white/1 border-white/5"
               : "bg-gray-50/50 border-gray-200"
           }`}
         >
@@ -549,7 +564,7 @@ function BorrowingSection() {
         <div
           className={`p-5 border rounded-lg ${
             isDarkMode
-              ? "bg-white/[0.01] border-white/5"
+              ? "bg-white/1 border-white/5"
               : "bg-gray-50/50 border-gray-200"
           }`}
         >
@@ -635,7 +650,7 @@ function BorrowingSection() {
         <div
           className={`p-5 border rounded-lg ${
             isDarkMode
-              ? "bg-white/[0.01] border-white/5"
+              ? "bg-white/1 border-white/5"
               : "bg-gray-50/50 border-gray-200"
           }`}
         >
@@ -726,7 +741,7 @@ function BorrowingSection() {
         <div
           className={`p-5 border rounded-lg ${
             isDarkMode
-              ? "bg-white/[0.01] border-white/5"
+              ? "bg-white/1 border-white/5"
               : "bg-gray-50/50 border-gray-200"
           }`}
         >
