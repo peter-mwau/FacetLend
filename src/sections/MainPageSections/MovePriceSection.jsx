@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { useMovePrice } from "../../contexts/MovePriceContext";
 import { useAPSDEX } from "../../contexts/APSDEXContext";
+import { ADDRESSES } from "../../constants/addresses";
 import { useActiveAccount } from "thirdweb/react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   TrendingUp,
   TrendingDown,
   RefreshCw,
   AlertTriangle,
-  CheckCircle,
   Zap,
   DollarSign,
   Shield,
@@ -20,7 +20,7 @@ import {
   Activity,
   Coins,
 } from "lucide-react";
-import { parseEther, formatEther } from "viem";
+import { parseEther } from "viem";
 import { toast } from "react-toastify";
 
 function MovePriceSection() {
@@ -39,7 +39,6 @@ function MovePriceSection() {
     getCurrentPrice,
     getEthReserves,
     getTokenReserves,
-    price,
     ethReserves,
     tokenReserves,
     loading: apsdexLoading,
@@ -91,20 +90,26 @@ function MovePriceSection() {
   };
 
   useEffect(() => {
-    if (address) {
-      fetchPrice();
-      checkInitialization();
-    }
+    if (!address) return;
+
+    void (async () => {
+      await fetchPrice();
+      await checkInitialization();
+    })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   // Auto-refresh price every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       if (address) {
-        fetchPrice();
+        void fetchPrice();
       }
     }, 30000);
     return () => clearInterval(interval);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   // Handle initialize
@@ -290,7 +295,7 @@ function MovePriceSection() {
           <div
             className={`p-4 rounded-lg border ${
               isDarkMode
-                ? "bg-white/[0.01] border-white/5"
+                ? "bg-white/1 border-white/5"
                 : "bg-gray-50/50 border-gray-200"
             }`}
           >
@@ -331,7 +336,7 @@ function MovePriceSection() {
           <div
             className={`p-4 rounded-lg border ${
               isDarkMode
-                ? "bg-white/[0.01] border-white/5"
+                ? "bg-white/1 border-white/5"
                 : "bg-gray-50/50 border-gray-200"
             }`}
           >
@@ -352,7 +357,7 @@ function MovePriceSection() {
           <div
             className={`p-4 rounded-lg border ${
               isDarkMode
-                ? "bg-white/[0.01] border-white/5"
+                ? "bg-white/1 border-white/5"
                 : "bg-gray-50/50 border-gray-200"
             }`}
           >
@@ -380,7 +385,7 @@ function MovePriceSection() {
             <div
               className={`p-5 border rounded-lg ${
                 isDarkMode
-                  ? "bg-white/[0.01] border-yellow-500/30"
+                  ? "bg-white/1 border-yellow-500/30"
                   : "bg-yellow-50/50 border-yellow-300"
               }`}
             >
@@ -424,7 +429,7 @@ function MovePriceSection() {
             <div
               className={`p-5 border rounded-lg ${
                 isDarkMode
-                  ? "bg-white/[0.01] border-white/5"
+                  ? "bg-white/1 border-white/5"
                   : "bg-gray-50/50 border-gray-200"
               }`}
             >
@@ -551,7 +556,7 @@ function MovePriceSection() {
             <div
               className={`p-5 border rounded-lg ${
                 isDarkMode
-                  ? "bg-white/[0.01] border-white/5"
+                  ? "bg-white/1 border-white/5"
                   : "bg-gray-50/50 border-gray-200"
               }`}
             >
@@ -631,7 +636,7 @@ function MovePriceSection() {
           <div className="flex items-center gap-2">
             <AlertTriangle size={14} />
             <span className="font-bold">Error:</span>
-            <span className="break-words">{String(error)}</span>
+            <span className="wrap-break-word">{String(error)}</span>
           </div>
         </motion.div>
       )}
