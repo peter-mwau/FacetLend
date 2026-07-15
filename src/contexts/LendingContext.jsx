@@ -110,6 +110,8 @@ export function LendingProvider({ children }) {
         );
       }
 
+      console.log("Adding collateral amount (wei):", amount.toString());
+
       const transaction = await prepareContractCall({
         contract,
         method: "addCollateral",
