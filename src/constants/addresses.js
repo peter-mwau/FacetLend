@@ -6,7 +6,7 @@ export const ADDRESSES = {
         DiamondCutFacet: "0xF39559bfC20029660355d6aBc53865c91e2F1637",
         DiamondLoupeFacet: "0xD6e1C0C1F0AB595Da6Af63ad90E0b53422C51926",
         OwnershipFacet: "0xfb2e29098bD8C1825ED089933fC2B8e6ef116c9e",
-        ApsdexFacet: "0x525b14069B77775B2Bfb068935cc30AF7EBD9BE8",
+        ApsdexFacet: "0x367807C77f41D1e0a600dAf13d7A3985BE3485B1",
         FlashLoanFacet: "0x461B77b568Fce016f6813501711dbFdAB25C5654",
         MovePriceFacet: "0xd7276E2C7EEa521B9b0Bd6e53eaC75e8bfE6fA38",
         LendingFacet: "0x0e36b85F2eECe143ff2F871dc352c0712455298C"

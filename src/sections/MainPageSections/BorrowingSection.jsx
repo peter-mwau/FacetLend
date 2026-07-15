@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { parseEther, formatEther } from "viem";
 import { toast } from "react-toastify";
+import { useAPSDEX } from "../../contexts/APSDEXContext";
 
 function BorrowingSection() {
   const { isDarkMode } = useDarkMode();
@@ -39,6 +40,7 @@ function BorrowingSection() {
     repayableAmount: contextRepayableAmount,
     positionDetails,
   } = useLending();
+  const { price } = useAPSDEX();
 
   const { mintTokens, burnTokens, getTokenBalance } = useAPS();
 
@@ -76,6 +78,14 @@ function BorrowingSection() {
     const n = Number(trimmed);
     if (!Number.isFinite(n) || n <= 0) return null;
     return n;
+  };
+
+  const getETHPerAPS = () => {
+    if (!price) return 0;
+    const raw = typeof price === "bigint" ? Number(price) : Number(price);
+
+    // LendingFacet.currentPrice() returns ETH per APS with 18 decimals.
+    return raw / 1e18;
   };
 
   // Fetch user position
@@ -216,9 +226,9 @@ function BorrowingSection() {
 
     // Check if user has enough collateral for the borrow amount
     const collateralETH = userPosition.collateralETH;
-    const apsPerETH = getAPSPerETH();
+    const ethPerAPS = getETHPerAPS();
     const maxBorrowETH = collateralETH / 1.2; // 120% collateral ratio
-    const maxBorrowAPS = maxBorrowETH * apsPerETH;
+    const maxBorrowAPS = ethPerAPS > 0 ? maxBorrowETH / ethPerAPS : 0;
 
     if (amt > maxBorrowAPS) {
       toast.error(
@@ -325,13 +335,6 @@ function BorrowingSection() {
     }
   };
 
-  // Helper functions
-  const getAPSPerETH = () => {
-    // This should come from your APSDEX context
-    // For now using a placeholder - you should pass price from context
-    return 1200000; // Placeholder: 1 ETH = 1,200,000 APS
-  };
-
   const formatHealthFactor = (hf) => {
     if (hf === null || hf === undefined) return null;
     const raw = typeof hf === "bigint" ? Number(hf) : Number(hf);
@@ -372,7 +375,10 @@ function BorrowingSection() {
 
   // Calculate max borrow for display
   const maxBorrowAPS = hasPosition
-    ? (userPosition.collateralETH / 1.2) * getAPSPerETH()
+    ? (() => {
+        const ethPerAPS = getETHPerAPS();
+        return ethPerAPS > 0 ? userPosition.collateralETH / 1.2 / ethPerAPS : 0;
+      })()
     : 0;
 
   return (
