@@ -8,6 +8,7 @@ import {
 } from "react";
 import PropTypes from "prop-types";
 import { ADDRESSES } from "../constants/addresses";
+import APSABI from "../artifacts/contracts/APS.sol/APS.json";
 import LendingABI from "../artifacts/contracts/facets/LendingFacet.sol/LendingFacet.json";
 import { client } from "../services/client";
 import { toast } from "react-toastify";
@@ -21,7 +22,9 @@ import {
 import { defineChain } from "thirdweb/chains";
 
 const DiamondAddress = ADDRESSES.MainDiamond;
+const APSAddress = ADDRESSES.APS;
 const Lending_ABI = LendingABI.abi;
+const APS_ABI = APSABI.abi;
 
 export const LendingContext = createContext();
 
@@ -237,6 +240,44 @@ export function LendingProvider({ children }) {
         throw new Error(
           "Wallet not connected or Thirdweb client not configured",
         );
+      }
+
+      const apsTokenContract = getContract({
+        address: APSAddress,
+        abi: APS_ABI,
+        client,
+        chain: defineChain(11155111),
+      });
+
+      const repayAmount = await readContract({
+        contract,
+        method: "getRepayAmount",
+        params: [address],
+      });
+
+      if (!repayAmount || repayAmount === 0n) {
+        throw new Error("No active loan to repay");
+      }
+
+      const allowance = await readContract({
+        contract: apsTokenContract,
+        method: "allowance",
+        params: [address, DiamondAddress],
+      });
+
+      if (allowance < repayAmount) {
+        toast.update(toastId, {
+          render: "Approving APS tokens for repayment...",
+          isLoading: true,
+        });
+
+        const approveTx = await prepareContractCall({
+          contract: apsTokenContract,
+          method: "approve",
+          params: [DiamondAddress, (1n << 256n) - 1n],
+        });
+
+        await sendTransaction({ transaction: approveTx, account });
       }
 
       const transaction = await prepareContractCall({
