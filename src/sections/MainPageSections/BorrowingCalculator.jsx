@@ -137,6 +137,16 @@ export function BorrowingCalculator() {
     return raw / 1e18;
   };
 
+  const formatCenteredNumber = (value) => {
+    const formatted = Number(value).toLocaleString(undefined, {
+      maximumFractionDigits: 0,
+    });
+
+    if (formatted.length <= 8) return formatted;
+
+    return `${formatted.slice(0, 3)}...${formatted.slice(-3)}`;
+  };
+
   // Calculate max borrowable APS based on collateral
   const calculateMaxBorrow = (collateralETH, priceAPS) => {
     // COLLATERAL_RATIO = 120% (from contract)
@@ -613,9 +623,7 @@ export function BorrowingCalculator() {
                     isDarkMode ? "text-blue-400" : "text-blue-600"
                   }`}
                 >
-                  {borrowingPower.currentPrice.toLocaleString(undefined, {
-                    maximumFractionDigits: 0,
-                  })}{" "}
+                  {formatCenteredNumber(borrowingPower.currentPrice)}
                   <span className="text-[10px] font-normal text-gray-500">
                     APS/ETH
                   </span>
@@ -676,7 +684,7 @@ export function BorrowingCalculator() {
                 >
                   {borrowingPower.currentHF === Infinity
                     ? "∞"
-                    : borrowingPower.currentHF.toFixed(2)}
+                    : formatCenteredNumber(borrowingPower.currentHF.toFixed(2))}
                   x
                 </div>
               </div>
@@ -698,13 +706,11 @@ export function BorrowingCalculator() {
                   </span>
                 </div>
                 <div
-                  className={`text-xl font-bold ${
+                  className={`text-lg font-bold ${
                     isDarkMode ? "text-white" : "text-gray-900"
                   }`}
                 >
-                  {borrowingPower.maxBorrowAPS.toLocaleString(undefined, {
-                    maximumFractionDigits: 0,
-                  })}
+                  {formatCenteredNumber(borrowingPower.maxBorrowAPS)}
                   <span className="text-xs font-normal text-gray-500 ml-1">
                     APS
                   </span>
@@ -748,9 +754,7 @@ export function BorrowingCalculator() {
                     isDarkMode ? "text-blue-400" : "text-blue-600"
                   }`}
                 >
-                  {borrowingPower.optimalBorrowAPS.toLocaleString(undefined, {
-                    maximumFractionDigits: 0,
-                  })}
+                  {formatCenteredNumber(borrowingPower.optimalBorrowAPS)}
                   <span className="text-xs font-normal text-gray-500 ml-1">
                     APS
                   </span>

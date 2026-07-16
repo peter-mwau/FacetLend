@@ -52,6 +52,23 @@ const HealthFactorGauge = ({
     return "ACCOUNT_SECURE";
   };
 
+  const formatHealthFactorDisplay = (value) => {
+    if (value === null || value === undefined) return "—";
+    if (value === Infinity) return "∞";
+
+    const rawValue =
+      typeof value === "number" ? value.toFixed(2) : String(value);
+
+    if (rawValue.length <= 8) return rawValue;
+
+    const [wholePart, decimalPart] = rawValue.split(".");
+    if (!decimalPart) {
+      return `${wholePart.slice(0, 3)}...${wholePart.slice(-3)}`;
+    }
+
+    return `${wholePart.slice(0, 3)}...${wholePart.slice(-3)}.${decimalPart}`;
+  };
+
   const getStatusColorClass = () => {
     switch (getStatusString()) {
       case "CRITICAL_RISK":
@@ -94,7 +111,8 @@ const HealthFactorGauge = ({
 
       <div className="flex items-baseline gap-2 mb-6">
         <span
-          className={`text-4xl font-bold tracking-tight ${
+          title={String(healthFactor)}
+          className={`text-2xl font-bold tracking-tight ${
             getStatusString() === "CRITICAL_RISK"
               ? "text-rose-500"
               : getStatusString() === "MARGIN_WARNING"
@@ -104,10 +122,7 @@ const HealthFactorGauge = ({
                   : "text-blue-500"
           }`}
         >
-          {typeof healthFactor === "number"
-            ? healthFactor.toFixed(2)
-            : healthFactor}
-          x
+          {formatHealthFactorDisplay(healthFactor)}x
         </span>
         <span className="text-[10px] text-gray-500">
           / 1.00x Execution Threshold
@@ -864,7 +879,7 @@ function Dashboard() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           <StatCard
             title="Total Collateral"
-            value={collateralETH}
+            value={Number(collateralETH).toFixed(3)}
             suffix="ETH"
             subtitle="VAULT_ROUTING: ACTIVE"
             icon={Layers}
@@ -884,7 +899,7 @@ function Dashboard() {
           />
           <StatCard
             title="Accrued Yield"
-            value={yieldFormatted}
+            value={Number(yieldFormatted).toFixed(3)}
             suffix="APS"
             subtitle="STAKING_ESCROW"
             icon={Cpu}
@@ -893,7 +908,7 @@ function Dashboard() {
           />
           <StatCard
             title="Repayable Debt"
-            value={repayableFormatted}
+            value={Number(repayableFormatted).toFixed(2)}
             suffix="ETH"
             subtitle="CLEARING_POOL"
             icon={ShieldAlert}
